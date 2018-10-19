@@ -4,19 +4,26 @@ function checkLeaveStatus($id)
 {
 	include 'config/database.php';
 
-		$qry = "SELECT staffid
-				FROM leavetrack
+		$qry = "SELECT appstatus
+				FROM leaveapp
 				WHERE staffid = '$id'
 				LIMIT 0,1";
 
-		$stmtname = $con->prepare($qry);
-		$stmtname->execute();
+		$stmt = $con->prepare($qry);
+		$stmt->execute();
 
-		$row = $stmtname->fetch(PDO::FETCH_ASSOC);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		$name = $row['staffname'];
-
-		return $name;	
+		//$count = $stmtname->rowCount();
+		$status = $row['appstatus'];
+		if ($status === 0) {
+			echo "denied";
+		} elseif ($status === 1) {
+			echo "pending";
+		} else {
+			echo "approved";
+		}
+			
 }
 
 function leavedetails($id)
