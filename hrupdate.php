@@ -1,7 +1,9 @@
 <?php
-include 'config/database.php';
-include 'leavefunction.php';
-		
+	include 'config/database.php';
+	include "leavefunction.php";
+	//check for session
+	checkSession();
+
 if (isset($_GET['id']))
 	{
 		$staffid = $_GET['id'];

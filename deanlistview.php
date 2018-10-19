@@ -1,5 +1,9 @@
 <?php
 	include 'config/database.php';
+	include "leavefunction.php";
+	//check for session
+	checkSession();
+
 
 		$hodid = "cu/05/89";
 		$staffid = "cu18166";
