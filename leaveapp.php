@@ -52,28 +52,6 @@ include 'leavefunction.php';
  		 	echo "Try again later";
  		 }//end of if commit
 
-
- 	/*	do{
- 			$checksql = $conn->prepare("select * from leaveapp where appno = '$appno'");
- 			$checksql->execute();
- 		}
- 			while ($checkcount = $checksql->rowCount() < 0);{
- 		//$address ='fghjk';
-
- 		$insertquery = $con ->prepare("INSERT INTO leaveapplications (staffid,appno,leavetype,reason,country,city,location,leavephoneno,startdate,enddate,officer1,officer2,
- 											officer3,appstatus,datecreated,dateresumed,resumptionconfirm,daysrecommended,commencementdate,returndate,released)
- 		VALUES ('$staffid','$appno', '$leavetype', '$reason','$country', '$city', '$location', '$leavephoneno', '$sdate','$edate',
- 		'$officer1','$officer2','$officer3', '0', '$databasedate', '2018-02-06 00:00:00', '0', '0', '2018-02-06', '2018-02-06', '0')");
- 		//print_r($insertquery);
-
- 				if($insertquery -> execute()){
- 					echo "<div class='alert alert-success'>Record was saved.</div>";
- 				} else {
- 					echo "<div class='alert alert-danger'>Record was not saved.</div>";
- 				}
- 	}end of while loop */
- }
-
 ?>
 
 								<h2 class="text-primary" style="font-family: garamond;">Leave Application</h2>

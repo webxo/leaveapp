@@ -4,9 +4,10 @@ function checkLeaveStatus($id)
 {
 	include 'config/database.php';
 
-		$qry = "SELECT staffname
-				FROM pdata
-				WHERE staffid = '$id'";
+		$qry = "SELECT staffid
+				FROM leavetrack
+				WHERE staffid = '$id'
+				LIMIT 0,1";
 
 		$stmtname = $con->prepare($qry);
 		$stmtname->execute();
