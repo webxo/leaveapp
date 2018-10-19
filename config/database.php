@@ -7,7 +7,7 @@
 
   try {
       $con = new PDO("mysql:host={$host};dbname={$db_name}", $username, $password);
-      echo "Connected";
+      //echo "Connected";
   } catch (PDOException $e) {
     echo "Connection error: ". $e->getMessage();
   }

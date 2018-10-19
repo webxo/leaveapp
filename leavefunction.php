@@ -14,17 +14,19 @@ function checkLeaveStatus($id)
 
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		//$count = $stmtname->rowCount();
 		$status = $row['appstatus'];
-		if ($status === 0) {
+		
+		if ($status = 0) {
 			echo "denied";
-		} elseif ($status === 1) {
+		} elseif ($status = 1) {
 			echo "pending";
-		} else {
+		} elseif ($status = 2){
 			echo "approved";
+		} else {
+			echo "The staff has no application in the database";
 		}
 			
-}
+}//end of function check leave status
 
 function leavedetails($id)
 {
