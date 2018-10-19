@@ -52,6 +52,10 @@ include 'leavefunction.php';
  		 	echo "Try again later";
  		 }//end of if commit
 
+
+ 	
+ }
+
 ?>
 
 								<h2 class="text-primary" style="font-family: garamond;">Leave Application</h2>
