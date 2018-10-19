@@ -1,1 +1,1 @@
-# leaveapp
+# An Application to manage leave applications
