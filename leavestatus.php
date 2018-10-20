@@ -5,9 +5,9 @@
 	checkSession();
 
 	//staff id from session();
-	$staffid = $_SESSION['staffid'];
+	$staffid = $_GET['id'];
 
-	$name = getname($staffid) ? getname($staffid) : "Michael Ross" ;
+	$name = getname($staffid) ? getname($staffid) : "Michael GRoss" ;
 
 	$sql = "SELECT leaveapp.staffid, appno, leavetype, hodrec, deandirrec, hrrec, registrarrec, vcrec, appstatus
 		FROM leaveapp
@@ -214,11 +214,11 @@
 			</table>
 		</div>
 			</div>
-
+				<div class="col-md-2">
+					<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
+				</div>
 			</div>
-			<div class="col-md-2">
-				<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
-			</div>
+			
 		</div>
 	</div> 
 			

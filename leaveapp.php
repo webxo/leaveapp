@@ -39,27 +39,34 @@
  		$edate = date('Y-m-d', strtotime($enddate));
  		$appno = randomString(8);
 
- 		$con -> beginTransaction();
+ 		//$con -> beginTransaction();
+ 		$con -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
- 		$query = "BEGIN";
- 		$query .="INSERT INTO leaveapp(staffid,appno,leavetype,reason,country,city,location,leavephoneno,startdate,enddate,officer1,officer2,officer3,appstatus,datecreated,dateresumed,resumptionconfirm,daysrecommended,commencementdate,returndate,released) VALUES ('$staffid','$appno', '$leavetype', '$reason','$country', '$city', '$location', '$leavephoneno', '$sdate','$edate','$officer1','$officer2','$officer3', '1', '$databasedate', '0000-00-00 00:00:00', '0', '0', '0000-00-00', '0000-00-00', '0')";
-		$query .="INSERT INTO leavetracks VALUES ('$staffid')";
-		$query.="COMMIT";
 
- 		$con -> exec($query);
+ 		try{ //try begins here
+
+ 		$query = "INSERT INTO leaveapp (staffid,appno,leavetype,reason,country,city,location,leavephoneno,startdate,enddate,officer1,officer2,officer3,appstatus,datecreated,dateresumed,resumptionconfirm,daysrecommended,commencementdate,returndate,released) VALUES ('$staffid','$appno', '$leavetype', '$reason','$country', '$city', '$location', '$leavephoneno', '$sdate','$edate','$officer1','$officer2','$officer3', '1', '$databasedate', '0000-00-00 00:00:00', '0', '0', '0000-00-00', '0000-00-00', '0')";
+		
+		//$stmt = $con->prepare($query);
+		$stmt = $con->prepare($query);
  		
- 		if ($con->commit()) {
+ 		if ($stmt->execute()){
+ 				$query1 = "INSERT INTO leavetrack (staffid) VALUE ('$staffid')";
+ 				$stmt1 = $con -> prepare($query1);
+ 					if ($stmt1->execute()) {
+ 						echo "Leave staffid submitted";
+ 					}
+ 					else{ echo "Staffid not submmited";}
  		 	echo "Leave application submitted";
- 		 	session_start();
- 		 	$_SESSION["staffid"] = $staffid;
-
- 		 	// Redirect user to welcome page
-            header("location: leavestatus.php");
+ 		 	header("location: leavestatus.php?id=$staffid");
  		 } else{
  		 	echo "Try again later";
- 		 }//end of if commit
+ 		 }//end of if for execute
 
-
+ 	}//try ends
+ 	catch(PDOExtension $e){
+ 		$e->getMessage();
+ 	}//catch ends here
  	
  }
 
