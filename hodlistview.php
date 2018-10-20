@@ -81,7 +81,7 @@
 		                  echo "<td>{$appstatus}</td>";
 		                  echo "<td>";
 		                      //view a single record
-		                  echo "<a href='officersview.php?id={$staffid}' class='btn btn-info m-r-1em'>View</a>";
+		                  echo "<a href='hodupdate.php?id={$staffid}' class='btn btn-info m-r-1em'>View</a>";
 		                      //link to update record
 		                  echo "</td>";
 		             }//end of while loop

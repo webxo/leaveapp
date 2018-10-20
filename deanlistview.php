@@ -95,10 +95,9 @@
 					echo "<td colspan=\"6\"> No Staff Applied for leave yet</td>";
 					echo "</tr>";
 				}
-			?> 
-			 
-				
+			?> 	
 			</table>
+			<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
 		</div>
 		<!-- End of table list -->
 </div>
