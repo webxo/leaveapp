@@ -93,8 +93,8 @@
 				}
 			?> 
 			 
-				
 			</table>
+			<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
 		</div>
 		<!-- End of table list -->
 </div>

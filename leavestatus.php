@@ -224,76 +224,11 @@
 				</tr>
 			</table>
 		</div>
-				<!-- New row to keep Leave Status profile -->
-			<!-- <div class="row">
-				<div class="col-md-6">
-					<h4>Leave Application Status</h4>
-				</div>
-				<div class="col-md-6">
-						<ul style="list-style-type:none">
-							<li>
-								<strong>HOD :</strong> 
-								<strong <?php 
-									if ($hodcom == "pending") {
-										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
-										echo 'class = "deny"';
-									} else{
-										echo 'class = "approve"'; 
-									}
-								?> >
-
-								<?php echo $hodcom; ?>
-									
-								</strong>
-							</li>
-							<li>
-								<strong>Dean :</strong> 
-								<strong	<?php 
-									if ($hodcom == "pending") {
-										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
-										echo 'class = "deny"';
-									} else{
-										echo 'class = "approve"'; 
-									}
-								?> >
-								<?php echo $deancom; ?></strong>
-							</li>
-							<li>
-								<strong>HR:</strong>
-								<strong <?php 
-									if ($hodcom == "pending") {
-										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
-										echo 'class = "deny"';
-									} else{
-										echo 'class = "approve"'; 
-									}
-								?> >
-								<?php echo $hrcom; ?> </strong>
-							</li> 
-							<li>
-								<strong>Registar :</strong>
-								<strong <?php 
-									if ($hodcom == "pending") {
-										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
-										echo 'class = "deny"';
-									} else{
-										echo 'class = "approve"'; 
-									}
-								?> > 
-								<?php echo $registrarcom; ?></strong>
-							</li>
-							
-						</ul>
-					</div> -->
 			</div>
 
 			</div>
 			<div class="col-md-2">
-				<!-- Nothing goes here -->
+				<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
 			</div>
 	</div>
 	</div> <!-- End of Border design 	 -->

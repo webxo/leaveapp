@@ -167,9 +167,13 @@ if (isset($_GET['id']))
 				<hr>
 
 				<div class="row">
-					<div class="col-md-4"></div>
+					<div class="col-md-6">
+						<a href='hodlistview.php' class="btn btn-default">Back to Lists of staff</a>
+					</div>
+					<div class="col-md-6">
 						<button class="col-md-4 btn btn-info" name="submit"> Submit </button>
 					</div>
+				</div>	
 			</form>
 				<!-- New row to keep Leave Status profile -->
 			

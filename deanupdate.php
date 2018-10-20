@@ -167,6 +167,7 @@ if (isset($_GET['id']))
 					<div class="col-md-6">
 						<button class="col-md-4 btn btn-info" name="submit"> Submit </button>
 					</div>
+				</div>
 					
 			</form>
 				<!-- New row to keep Leave Status profile -->
