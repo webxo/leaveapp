@@ -1,5 +1,5 @@
 <?php
-include 'config/database.php';
+	include 'config/database.php';
 	include "leavefunction.php";
 	//check for session
 	checkSession();
@@ -12,16 +12,7 @@ if (isset($_GET['id']))
 
 		$name = getname($staffid);
 		
-		# Check for department
-		/*$querydept = "SELECT unit 
-						FROM pdata 
-						WHERE hodid = ?";
-
-		$stmt = $con->prepare($querydept);
-		$stmt->bindParam(1, $hodid);
-		$stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);*/
-
+		
         //test for the department
 
 
@@ -171,7 +162,7 @@ if (isset($_GET['id']))
 
 				<div class="row">
 					<div class="col-md-6">
-						<a href='deanlist.php' class="btn btn-default">Back to Lists of staff</a>
+						<a href='deanlistview.php' class="btn btn-default">Back to Lists of staff</a>
 					</div>
 					<div class="col-md-6">
 						<button class="col-md-4 btn btn-info" name="submit"> Submit </button>

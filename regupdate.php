@@ -168,7 +168,7 @@ if (isset($_GET['id']))
 
 				<div class="row">
 					<div class="col-md-6">
-						<a href='hrlist.php' class="btn btn-default">Back to Lists of staff</a>
+						<a href='reglistview.php' class="btn btn-default">Back to Lists of staff</a>
 					</div>
 					<div class="col-md-6">
 						<button class="col-md-4 btn btn-info" name="submit"> Submit </button>

@@ -1,11 +1,14 @@
 <?php 
-	include_once("config/database.php");
+	include 'config/database.php';
+	include "leavefunction.php";
+	//check for session
+	checkSession();
 
 	//staff id from session();
 	$staffid = "cu18156";
 	$name = "Lora Miley";
 
-	$sql = "SELECT leaveapp.staffid, leaveapp.appno, leaveapp.leavetype, leavetrack.hodcom, leavetrack.deancom, leavetrack.deancom, leavetrack.hrcom, leavetrack.registrarcom
+	$sql = "SELECT leaveapp.staffid, appno, leavetype, hodrec, deandirrec, hrrec, registrarrec, vcrec, appstatus
 		FROM leaveapp
 		INNER JOIN leavetrack ON leaveapp.staffid = leavetrack.staffid
 		WHERE leaveapp.staffid = '".$staffid."'
@@ -21,10 +24,12 @@
 		
 	$leavetype = $row['leavetype'];
 	$appno = $row['appno'];
-	$hodcom = $row['hodcom'];
-	$deancom = $row['deancom'];
-	$hrcom = $row['hrcom'];
-	$registrarcom = $row['registrarcom'];	 
+	$appstatus = $row['appstatus'];
+	$hodrec = $row['hodrec'];
+	$deandirrec = $row['deandirrec'];
+	$hrrec = $row['hrrec'];
+	$registrarrec = $row['registrarrec'];
+	$vcrec = $row['vcrec'];	 
 
 
 
@@ -84,10 +89,10 @@
 						
 					<div class="col-md-8">
 						<?php 
-							if ($registrarcom == "pending" || $hrcom == "pending" || $hodcom == "pending" || $deancom == "pending") { ?>
+							if ($appstatus == "1") { ?>
  								<strong><p class="pend"> Application for leave is in progress</p></strong>
 
-						<?php }  elseif ( $registrarcom == "approved" ) {?>
+						<?php }  elseif ( $appstatus == "2" ) {?>
 								<strong><p class="approve"> Application for leave is aprroved</p></strong>
 						<?php } else { ?>
 								<strong><p class="deny"> Application for leave is Denied</p></strong>
@@ -113,15 +118,24 @@
 					<td> 12 Dec 2009  5: 30pm</td>
 					<td> 15 Dec  2009  4: 30am</td>
 					<td <?php 
-									if ($hodcom == "pending") {
+									if ($hodrec == 1) {
 										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
+									}elseif ($hodrec == 0) {
 										echo 'class = "deny"';
 									} else{
 										echo 'class = "approve"'; 
 									}
 								?> >
-								<strong><?php echo $hodcom; ?></strong>
+								<strong>
+									<?php if ($hodrec == 1) {
+										echo "Application is in Progress";
+									}elseif ($hodrec == 0) {
+										echo "Application is denied";
+									} else{
+										echo "Application is approved"; 
+									} ?>
+									
+								</strong>
 					 </td>
 				</tr>
 
@@ -132,15 +146,24 @@
 					<td> 14 Oct 2009  5: 30pm</td>
 					<td> 15 Oct 2009  4: 30am</td>
 					<td <?php 
-									if ($hodcom == "pending") {
+									if ($deandirrec == 1) {
 										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
+									}elseif ($deandirrec == 0) {
 										echo 'class = "deny"';
 									} else{
 										echo 'class = "approve"'; 
 									}
 								?> >
-								<strong><?php echo $deancom; ?></strong>
+								<strong>
+									<?php if ($deandirrec == 1) {
+										echo "Application is in Progress";
+									}elseif ($deandirrec == 0) {
+										echo "Application is denied";
+									} else{
+										echo "Application is approved"; 
+									} ?>
+									
+								</strong>
 					 </td>
 				</tr>
 
@@ -151,15 +174,24 @@
 					<td> 12 Dec 2009  5: 30pm</td>
 					<td> 15 Dec 2009  4: 30am</td>
 					<td <?php 
-									if ($hodcom == "pending") {
+									if ($deandirrec == 1) {
 										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
+									}elseif ($deandirrec == 0) {
 										echo 'class = "deny"';
 									} else{
 										echo 'class = "approve"'; 
 									}
 								?> >
-								<strong><?php echo $hodcom; ?></strong>
+								<strong>
+									<?php if ($deandirrec == 1) {
+										echo "Application is in Progress";
+									}elseif ($deandirrec == 0) {
+										echo "Application is denied";
+									} else{
+										echo "Application is approved"; 
+									} ?>
+									
+								</strong>
 					 </td>
 				</tr>
 
@@ -170,15 +202,24 @@
 					<td> 12 Dec 2009  5: 30pm</td>
 					<td> 15 Dec 2009  4: 30am</td>
 					<td <?php 
-									if ($hodcom == "pending") {
+									if ($deandirrec == 1) {
 										echo 'class = "pend"';
-									}elseif ($hodcom == "denied") {
+									}elseif ($deandirrec == 0) {
 										echo 'class = "deny"';
 									} else{
 										echo 'class = "approve"'; 
 									}
 								?> >
-								<strong><?php echo $registrarcom; ?></strong>
+								<strong>
+									<?php if ($deandirrec == 1) {
+										echo "Application is in Progress";
+									}elseif ($deandirrec == 0) {
+										echo "Application is denied";
+									} else{
+										echo "Application is approved"; 
+									} ?>
+									
+								</strong>
 					 </td>
 				</tr>
 			</table>
