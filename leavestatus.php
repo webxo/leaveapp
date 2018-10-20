@@ -5,8 +5,9 @@
 	checkSession();
 
 	//staff id from session();
-	$staffid = "cu18156";
-	$name = "Lora Miley";
+	$staffid = $_SESSION['staffid'];
+
+	$name = getname($staffid) ? getname($staffid) : "Michael Ross" ;
 
 	$sql = "SELECT leaveapp.staffid, appno, leavetype, hodrec, deandirrec, hrrec, registrarrec, vcrec, appstatus
 		FROM leaveapp
@@ -30,10 +31,6 @@
 	$hrrec = $row['hrrec'];
 	$registrarrec = $row['registrarrec'];
 	$vcrec = $row['vcrec'];	 
-
-
-
-
            
 ?>
 <!DOCTYPE html>
@@ -51,19 +48,10 @@
 			<h1 class="h1">Leave Application Status Page</h1>
 		</div>	
 		<!-- End of title  -->
-		<div class="row">
-			<!-- <p class="para_1">This page contains the status of your application. Each approval will be updated 
-			below. Check this page always to know the status of your aplication</p> -->
-		</div>
+		<div class="row"> </div>
 	
 		<div class="row">
-			<!-- <div class="col-md-2">
-				<a href="leave_app.php">Leave Application Form</a><br>
-				<a href="officersview.php">Leave Application Status View by Senior Staff</a><br>
-				<a href="officerslist.php">Leave Application List</a><br>
-				<a href="leavestatus.php">Leave Application Status </a>
-			</div> -->
-			
+						
 			<div class="col-md-8">
 				<div class="bor_der">
 				<div class="row">
@@ -82,6 +70,7 @@
 						<h4 class="col-md-6"> Leave Type</h4>
 						<h6 class="col-md-6"> <?php echo $leavetype; ?></h6>
 					</div>
+					<p><?php echo $appstatus; ?></p>
 				<div class="row">
 					<div class="col-md-4">
 						<h4> Leave Status</h4>
@@ -89,10 +78,10 @@
 						
 					<div class="col-md-8">
 						<?php 
-							if ($appstatus == "1") { ?>
+							if ($appstatus == 1) { ?>
  								<strong><p class="pend"> Application for leave is in progress</p></strong>
 
-						<?php }  elseif ( $appstatus == "2" ) {?>
+						<?php }  elseif ( $appstatus == 2 ) {?>
 								<strong><p class="approve"> Application for leave is aprroved</p></strong>
 						<?php } else { ?>
 								<strong><p class="deny"> Application for leave is Denied</p></strong>
@@ -230,24 +219,10 @@
 			<div class="col-md-2">
 				<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
 			</div>
-	</div>
-	</div> <!-- End of Border design 	 -->
-			<!-- Display Approval Message -->
-
-			<!-- <div class="row appr-status">
-				<div class="col-md-6">
-					<div class="alert alert-success">
-						<strong> Application for leave is approved</strong>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="alert alert-danger">
-						<strong> Application for leave is Denied. You may reapply again</strong>
-					</div>
-				</div>
-			</div> -->
-			
 		</div>
+	</div> 
+			
+</div>
 </div>
 
 	<script src="js/jquery-slim.min.js"></script>

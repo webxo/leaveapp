@@ -1,6 +1,8 @@
 <?php
-include 'config/database.php';
-include 'leavefunction.php';
+	include 'config/database.php';
+	include "leavefunction.php";
+	//check for session
+	checkSession();
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +50,11 @@ include 'leavefunction.php';
  		
  		if ($con->commit()) {
  		 	echo "Leave application submitted";
+ 		 	session_start();
+ 		 	$_SESSION["staffid"] = $staffid;
+
+ 		 	// Redirect user to welcome page
+            header("location: leavestatus.php");
  		 } else{
  		 	echo "Try again later";
  		 }//end of if commit
