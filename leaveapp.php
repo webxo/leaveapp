@@ -71,7 +71,7 @@
  }
 
 ?>
-
+						<p><a href="welcome.php" class="btn btn-default">Back to dashboard</a></p>
 								<h2 class="text-primary" style="font-family: garamond;">Leave Application</h2>
 							</div>
 						</div>
