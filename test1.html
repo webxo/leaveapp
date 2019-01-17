@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+<style>
+body {
+    font-family: "Lato", sans-serif;
+    font-size: 13px;
+}
+
+table {
+  width: 100px;
+}
+
+.sidenav {
+    height: 100%;
+    margin-left: 250px;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    padding-top: 50px;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.main {
+    margin-left: 600px; /* Same as the width of the sidenav */
+    /* font-size: 18px;  Increased text to enable scrolling */
+    padding: 0px 10px;
+    width: 600px;
+    background-color: white;
+}
+.main #title{
+  padding-left: 50px;
+  padding-top: 50px;
+  margin-bottom: 20px;
+  border-bottom: solid;
+  border-bottom-width: thin;
+  text-align: center;
+}
+#title{
+  padding-top: 20px;
+}
+
+.sub-title{
+  border-bottom: solid;
+  border-bottom-width: thin;
+}
+
+.pt-0 {
+  margin-top: 0 !important;
+}
+
+.m-r-1em{ margin-right:1em; }
+.m-b-1em{ margin-bottom:1em; }
+.m-b-0em{ margin-bottom:0em; }
+.m-l-1em{ margin-left:1em; }
+.mt0{ margin-top:0; }
+
+.padder{
+  padding-bottom: -10px;
+}
+
+.boder{
+  border-style: solid;
+  padding-left: 5px;
+  border-width: thin;
+  border-color: black;
+}
+
+.border-l{
+  margin-left: 17px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.border-r{
+  margin-left: 5px;
+  padding-right: 40px;
+  padding-left: 20px;
+}
+
+.pad-b{
+  padding-bottom: 0px;
+}
+
+#tdcom{
+  width: 50px;
+}
+
+.rec-form {
+    display: none;
+}
+
+input[type=date] {
+  border: 1px solid #999;
+  border-radius: 2;
+  width: 140px;
+}
+
+textarea{
+  border: 1px solid #999;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+</style>
+</head>
+<body>
+
+
+<div class="sidenav">
+
+  <h3 class="card-title">Application Details</h3>
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td>Staff Name:</td>
+                                        <td>Ojikutu David</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Leave Type:</td>
+                                        <td>Annual</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Applied Start Date:</td>
+                                        <td>12 - Dec- 2017</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Applied End Date</td>
+                                        <td>12- Dec - 2017</td>
+                                    </tr> 
+                                    <tr>
+                                        <td>Reason:</td>
+                                        <td>It's my annual leave</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone number:</td>
+                                        <td>09876543</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>Officers to handover to : </b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Officer 1:</td>
+                                        <td>Dele Steve</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Officer 2:</td>
+                                        <td>Aliyu Jimoh</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Officer 3:</td>
+                                        <td>Dauda Longe</td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="2">
+                                        <input type="submit" name="" value="Add more comment" class="btn btn-default">
+                                      </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+</div>
+
+<div class="main">
+<div class="container">
+  
+    <h4 id="title">Recommendations/Approvals</h4>
+    <!--
+    <h5><span class="sub-title">Supervisor 1</span></h5>
+    <div class="row">
+       <p class="col-sm-6">Applied Start Date: <span class="boder border-l">12-Dec-2018<span></p> 
+       <p class="col-sm-6 boder-p">Applied Start Date: <span class="boder border-r">12-Dec-2018<span></p> 
+    </div>
+
+    <div class="row m-b-0em">
+       <p class="col-sm-3">Comment: </p> 
+       <p class="col-sm-9 boder">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+       tempor incididunt ut labore et dolore magna aliqua. </p> 
+    </div>
+    
+    <div class="row m-b-0em">
+       <p class="col-md-3">Recommendation: </p> 
+       <p class="col-md-9 boder">Approved</p> 
+    </div>
+  -->
+    <div class="row m-b-1em">
+      <button id="btn-rec" class="col-sm-5 btn btn-default btn-sm"> Click to make recommendation </button> 
+    </div>
+
+<div class="row rec-form"> 
+    <legend> Form</legend>  
+    <table class="table table-sm">
+      <tbody>
+        <tr>
+          <td>Recommended Start date <input type="date"name="sdate" id="sdate"></td>
+          <td>Recommended End date <input type="date"name="sdate" id="sdate"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-sm">
+  <tbody>
+    <tr>
+      <td width="50px">Comment</td>
+      <td><textarea class="form-control" name="reason" id="reason" rows="1" cols="40" required></textarea></td>
+    </tr>
+    <tr>
+      <td><label>Recommendation</label></td>
+        <td>
+        <select class="form-width">
+          <option>....</option>
+          <option> Approved </option>
+          <option> Not Approved</option>
+        </select>
+      </td>
+      <td colspan="2"><button id="btn-save" class="btn btn-default btn-sm">Save</button></td>
+    </tr>  
+  </tbody>
+    </table>                            
+</div><!--End of rec-form-->
+
+</div><!-- End of container-->
+</div><!-- end of main div-->
+
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script> 
+    <script type="text/javascript">
+      $(document).ready(function(){
+        //$('.rec-form').hide();
+
+        $('#btn-rec').click(function(){
+          $('.rec-form').slideToggle();
+        });
+      });
+    </script>
+</body>
+</html> 

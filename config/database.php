@@ -1,7 +1,7 @@
 <?php
   #used to connect to the databse
   $host = "localhost";
-  $db_name = "hr_";
+  $db_name = "leavedb";
   $username = "root";
   $password = "";
 

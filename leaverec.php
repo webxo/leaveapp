@@ -17,7 +17,7 @@ extract($_POST);
 
 
 //get staffid
-$staffid = randomID(6);
+//$staffid = randomID(6);
 
 //get transaction id for the current application stream 
 $track = trackid($appno); //this is the transactionid which will later be increased by 1
@@ -32,7 +32,7 @@ $timeviewed = date('Y-m-d H:i:s');
 
 //get status
 
-		$qry = "INSERT INTO leavetransaction (appno, tstaffid, transactionid, timeviewed,status, recstartdate, recenddate, remarks) 
+		$qry = "INSERT INTO leavetransaction (appno, tstaffid, transactionid, timeviewed, status, recstartdate, recenddate, remarks) 
 				VALUES (:appno, :staffid, :transactionid, :timeviewed, :status, :recstartdate, :recenddate, :remarks)";
 
         // prepare query for excecution

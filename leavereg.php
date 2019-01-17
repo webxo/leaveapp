@@ -11,13 +11,10 @@ For every appno entrying this file, the transactionid increases by 1.
 // $staffid = implode(',', array_map(function($el){ return $el['idno']; }, get_user($_SESSION['loginid']))) ?implode(',', array_map(function($el){ return $el['idno']; }, get_user($_SESSION['loginid']))) : $_GET[''];
 
 
-include('config/database.php');
+//include('config/database.php');
 include('leavefunction.php');
 
 checkSession();
-$staffid = $_SESSION['staffdetails']['staffid'];
-
-$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 /*
 echo $_SESSION['loginid']."<br>";
@@ -32,19 +29,9 @@ if(isHod($_SESSION['loginid'])){
 */
 
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-
-
 
 
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
- <!--  <link rel="stylesheet" href="/resources/demos/style.css"> -->
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.3.1.js"
   integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -69,13 +56,7 @@ if(isHod($_SESSION['loginid'])){
   margin-left: 10px;
   
 }
-.dialog{
-	display: none;
-}
 </style>
-
-</head>
-<body>
 
 <div></div>
   <div id="space" class="row">
@@ -86,8 +67,15 @@ if(isHod($_SESSION['loginid'])){
           <!-- Form Name -->
           <legend>Leave Application Form</legend>
       <div>
-        <p id="message">    </p>
-         <input type="hidden" id="staffid" name="staffId" value="<?php echo $staffid; ?>">
+        <p id="message">
+            <?php 
+                if (isset($_GET['formreturn']))
+                {
+                      echo "Form cannot be empty";
+                  }
+            ?>
+
+        </p>
       </div>
           <!-- Leave Category-->
           <div class="form-group">
@@ -127,62 +115,29 @@ if(isHod($_SESSION['loginid'])){
           </div>
 
           <div class="form-group">
-            <label class="col-sm-3 control-label" for="textinput">Destination Address</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" name="location" id="location">
-            </div>
-          </div>
-
-          <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Phone Number <br><small>While on Leave</small></label>
             <div class="col-sm-6">
               <input type="text" class="form-control" name="phone" id="phone">
             </div>
           </div>
 
-          <?php
-          		//$loginid = $_SESSION['loginid'];
-
-          		$qry = "SELECT staffid, sname, fname FROM stafflst";
-  				    $stmt = $con->prepare($qry);
-	       			$stmt->execute();
-
-				      //$staff = $stmt->fetch(PDO::FETCH_ASSOC);
-			   ?>
 
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Officer 1</label>
             <div class="col-sm-9">
-            <?php 
-            
-            	$select = '<select name="officer1" id="officer1" class="form-control" required>';
-            		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            			$result[] = $row; 
-                $select .= '<option value = "'.$row['staffid'].'">'.$row['sname'].' '.$row['fname'].'</option>';
-                     }//end of while statement 
-              	$select .= '</select>';
-              	echo $select;
-                       
-            ?>
-			</div>
+              <select name="officer1" id="officer1" class="form-control" required>
+                          <option value = 'Jimoh'>Jimoh</option>
+              </select>
+            </div>
           </div>
 
-          
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Officer 2</label>
             <div class="col-sm-9">
-				<select name="officer2" id="officer2" class="form-control" required>
-
-			<?php
-                 foreach ($result as $staff)    
-			
-			{ 
-                echo  '<option value = "'.$staff['staffid'].'">'.$staff['sname'].' '.$staff['fname'].'</option>';
-            }
-            ?>
-              	</select>                       
-              
-
+              <select name="officer2" id="officer2" class="form-control" required>
+                          <option value = ''></option>
+                          <option value = 'Ade'>Ade</option>
+              </select>
             </div>
           </div>
 
@@ -190,15 +145,8 @@ if(isHod($_SESSION['loginid'])){
             <label class="col-sm-3 control-label" for="textinput">Officer 3</label>
             <div class="col-sm-9">
               <select name="officer3" id="officer3" class="form-control" required>
-              	<?php
-                 foreach ($result as $staff)    
-			
-			{ 
-                echo  '<option value = "'.$staff['staffid'].'">'.$staff['sname'].' '.$staff['fname'].'</option>';
-            }
-            ?>
-                         <!--  <option value = ''></option>
-                          <option value = 'Jaja'>Jaja</option> -->
+                          <option value = ''></option>
+                          <option value = 'Jaja'>Jaja</option>
               </select>
             </div>
           </div>
@@ -207,8 +155,8 @@ if(isHod($_SESSION['loginid'])){
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <div class="pull-right">
-                <a class="btn btn-default" href='redrect.php?id= <?php echo base64_encode($staffid); ?>'>Cancel</a>
-                 <button type="submit" class="btn btn-default" id="apply">Submit</button>
+                <button class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-default" id="apply">Submit</button>
               </div>
             </div>
           </div>
@@ -217,13 +165,10 @@ if(isHod($_SESSION['loginid'])){
 
 
 <script type="text/javascript">
-  
   $(function(){
 
   //$( "#sdate" ).datepicker( "input", "dateFormat", "d-M-yy");
-    $("#edate").change(function(ev){
-
-      ev.preventDefault();
+    $("#edate").change(function(){
 
       var sdate = $("#sdate").val();
       var edate = $("#edate").val();
@@ -236,12 +181,11 @@ if(isHod($_SESSION['loginid'])){
             edate:edate
         },
         dataType: "text",
-            success: function(res) {
+            success: function(response) {
                 //alert(data);
                 //$("#message").html(data);
-                
                 $("#datedif").addClass("adiff");
-                $('p#datedif').html(res);
+                $('p#datedif').html(response);
               },
             error: function(data) {
                 $("#message").html(data);
@@ -253,29 +197,22 @@ if(isHod($_SESSION['loginid'])){
     
     });
     
-  $("#apply").on('click', function(e){
-    
-    e.preventDefault();
-
+  $("#apply").on('click', function(){
+          
     var leavetype = $("#leavetype").val();
     var reason = $("#reason").val();
     var sdate = $("#sdate").val();
     var edate = $("#edate").val();
-    var location = $("#location").val();
     var phone = $('#phone').val();
     var officer1 = $("#officer1").val();
     var officer2 = $("#officer2").val();
     var officer3 = $("#officer3").val();
 
-    var staffid = $('#staffid').val();
+    //var encappno = window.btoa(appno);
 
-    //hurl = 'redrect.php';
-	if ((leavetype == '') || (reason == '') || (sdate == '') || (edate == '') || (location == '') || (phone == '') || (officer1 == '') || (officer2 == '') || (officer3 == ''))
-		 {
-				alert("All fields are required.");
-			}
-else {
-        
+    //var url = "leavestatus.php?="+encappno;
+    
+    
 // AJAX code to send data to php file.
     $.ajax({
             type: "POST",
@@ -285,7 +222,6 @@ else {
               reason:reason,
               sdate:sdate,
               edate:edate,
-              location:location,
               phone:phone,
               officer1:officer1,
               officer2:officer2,
@@ -293,35 +229,18 @@ else {
             },
             dataType: "text",
             success: function(response) {
-            	if (response == 'SUCCESS') {
-            		alert("Application Successful. You will be redirected to Dashboard");
-            		window.location.replace("leavedashboard.php?id="+btoa(staffid));
-            	}
-
-            	if (response == 'ERROR') {
-            		alert("Try Again");
-            	}
-
-            	if (response == 'EMPTY FORM') {
-            		alert("One part of the form is not filled");
-            	}
-
-              if (response == 'DATABASE ERROR') {
-                alert("Try again later");
-              }
-            },
+                //alert(data);
+                //$("#message").html(data);
+                alert("Application Successful");
+                $("p").addClass("alert alert-default");
+                $('#message').html(response);
+              },
             error: function(data) {
                 $("#message").html(data);
                 $("p").addClass("alert alert-danger");
             },
         });
-	}//end of if else
-
   });
-
   
 });
 </script>
-
-</body>
-</html>
