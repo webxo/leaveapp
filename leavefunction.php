@@ -278,18 +278,16 @@ function getstaffidbyappno($appno){
 		
 		include 'config/database.php';
 
-		$qry = "SELECT transactionid
+		$qry = "SELECT MAX(transactionid) AS transaction
 				FROM leavetransaction
-				WHERE appno = '$appno'
-				ORDER BY transactionid DESC
-				LIMIT 1";
+				WHERE appno = '$appno'";
 
 		$stmt= $con->prepare($qry);
 		$stmt->execute();
 
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		$track = $row['transactionid'];
+		$track = $row['transaction'];
 
 		return $track;
 

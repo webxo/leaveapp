@@ -23,7 +23,7 @@
 		try 
     	{
        			#Query to select leave details of the $this staff
-        		$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks, l.location
+        		$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.role, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks, l.location
 				  FROM stafflst AS s
                   INNER JOIN leaveapplication AS l
                   ON s.staffid = l.staffid
@@ -53,7 +53,7 @@
 		try 
     	{
        	#Query to select leave details of the $this staff
-        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks, l.location
+        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.role, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks, l.location
 				  FROM stafflst AS s
                   INNER JOIN leaveapplication AS l
                   ON s.staffid = l.staffid
@@ -84,7 +84,7 @@
 	try 
     	{
        	#Query to select leave details of the $this staff
-        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks, l.location
+        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.role, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks, l.location
 				  FROM stafflst AS s
                   INNER JOIN leaveapplication AS l
                   ON s.staffid = l.staffid
@@ -114,7 +114,7 @@
 		try 
     	{
        		#Query to select leave details of the $this staff
-        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks
+        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.role, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks
 				  FROM stafflst AS s
                   INNER JOIN leaveapplication AS l
                   ON s.staffid = l.staffid
@@ -144,7 +144,7 @@
 		try 
     	{
        	#Query to select leave details of the $this staff
-        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks
+        	$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.role, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks
 				  FROM stafflst AS s
                   INNER JOIN leaveapplication AS l
                   ON s.staffid = l.staffid
@@ -173,7 +173,7 @@
 			try 
     		{
        			#Query to select leave details of the $this staff
-        		$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks
+        		$query = "SELECT st.fname, st.sname, s.dept, s.hod, l.staffid, l.leavetype, l.reason, l.startdate, l.enddate, l.leavestatus, l.appno, lt.tstaffid, lt.comment, lt.role, lt.transactionid, lt.recstartdate, lt.recenddate, lt.status, lt.timeviewed, lt.remarks
 				  FROM stafflst AS s
                   INNER JOIN leaveapplication AS l
                   ON s.staffid = l.staffid
@@ -208,7 +208,7 @@
 <div class="container">
 
 		<div class="row hed">
-			<div class="col-md-3"></div>
+			<div class="col-md-4"></div>
 			<h3 style="text-align: center;">Application Status View</h3>
 		</div>	
 		<!-- End of title  -->
@@ -221,6 +221,7 @@
 						<th> No</th>
 						<th> Action Date</th><!--Transaction Date-->
 						<th> Staff Name</th>
+						<th> Role</th>
 						<th> App No</th>
 						<th> Leave Type</th>
 						<th> Reason</th>
@@ -245,6 +246,7 @@
 		                  echo "<td>".$n++."</td>";
 		                  echo "<td>".date('j M, Y - h:i:s', strtotime($row['timeviewed']))."</td>";
 		                  echo "<td>".getname($row['tstaffid'])."</td>";
+		                  echo "<td>".$row['role']."</td>";
 		                  echo "<td>".$row['appno']."</td>";
 		                  echo "<td>".$row['leavetype']."</td>";
 		                  echo "<td>".$row['reason']."</td>";

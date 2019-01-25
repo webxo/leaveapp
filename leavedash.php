@@ -18,66 +18,350 @@ checksession();
 $appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
 
 try {
+        #A QUICK QUERY TO CHECK IF A SUPERVISOR HAS ACTED ON AN APPLICATION
+    $chkdtqry = "SELECT recstartdate, recenddate FROM leavetransaction 
+                 WHERE appno = '$appno' 
+                 ORDER BY `sn` DESC
+                 LIMIT 1";
+
+        $chkstmt1 = $con->prepare($chkdtqry);
+        $chkstmt1->execute();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   #A QUICK QUERY TO CHECK IF A SUPERVISOR HAS ACTED ON AN APPLICATION
     $chkqry = "SELECT * FROM leavetransaction 
-                WHERE appno LIKE '$appno' 
-                AND tstaffid LIKE '$staffid' ORDER BY `sn` ASC";
+               WHERE appno LIKE '$appno' 
+               AND tstaffid LIKE '$staffid' ORDER BY `sn` ASC";
 
         $chkstmt = $con->prepare($chkqry);
         $chkstmt->execute();
         
         $chkqrynum = $chkstmt->rowCount();
+        $datenum = $chkstmt->rowCount();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #Query to select leave details of the $this staff
-        $queryleave = "SELECT staffid, leavetype, startdate, enddate, phone, reason, officer1, officer2, officer3
-                       FROM leaveapplication
+        $queryleave = "SELECT st.sname, st.fname, l.staffid, l.leavetype, l.startdate, l.enddate, l.phone, l.reason, l.officer1, l.officer2, l.officer3, st.post, st.dept, st.kol, st.unitprg, st.category
+                       FROM leaveapplication AS l
+                       INNER JOIN stafflst AS st
+                       ON st.staffid = l.staffid
                        WHERE appno = $appno";
 
         $stmtleave = $con->prepare($queryleave);
+        $stmtapp = $con->prepare($queryleave);
         $stmtleave->execute();
         
         $num = $stmtleave->rowCount();
         
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #Query to select leave progress of staff
-        $trqry = "SELECT remarks, recstartdate, recenddate, status
-                           FROM leavetransaction
-                           WHERE appno = $appno 
-                           AND transactionid > 1
-                           ORDER BY transactionid DESC";
+        $trqry = "SELECT *
+                  FROM leavetransaction
+                  WHERE appno = $appno 
+                  AND transactionid > 1
+                  ORDER BY transactionid ASC";
 
         $stmtr = $con->prepare($trqry);
         $stmtr->execute();
         
         $numtr = $stmtr->rowCount();  
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #Query for recommendations 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        
+    }//end of try
+    catch(PDOException $e){
+         echo "Error: " . $e->getMessage();
+    }//end of catch      
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Leave Application Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+   table {
+    width: 50px;
+  }
+
+  .adiff {
+  position: absolute;
+  top: 237px;
+  right: -90px;
+  width: 100px;
+  height: 40px;
+  padding: 3px;
+  margin-left: 10px;  
+}
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body>
+  <?php
+  if ($num > 0) { 
+    while($staffdet=$stmtleave->fetch(PDO::FETCH_ASSOC))
+        {
+    ?>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+        <h3>Applicant Details</h3>
+  <table class="table table-bordered table-condensed">
+    <tr>
+      <th>Staff Name</th>
+      <th>Post</th>
+      <th>Category</th>
+      <th>Unit/Program</th>
+      <th>Department</th>
+      <th>College/Directorate</th>
+    </tr>
+    <tr>
+      <td>
+        <?php echo getname($staffdet['staffid']);  ?>
+      </td>
+      <td>
+        <?php echo $staffdet['post']; ?>
+      </td>
+      <td>
+        <?php 
+          $staffcat = $staffdet['category'];
+          echo $staffdet['category'];  
+        ?>
+      </td>
+      <td>
+        <?php echo $staffdet['unitprg'];  ?>
+      </td>
+      <td>
+        <?php echo $staffdet['dept'];  ?>
+      </td>
+      <td>
+        <?php echo $staffdet['kol'];  ?>
+      </td>
+      
+      
+      
+
+    </tr>
+  </table>
+      
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+
+      <!-- <h4>John's Blog</h4>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#section1">Home</a></li>
+        <li><a href="#section2">Friends</a></li>
+        <li><a href="#section3">Family</a></li>
+        <li><a href="#section3">Photos</a></li>
+      </ul><br>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search Blog..">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div> -->
+<!------------------------------------------------New Content---------------------------------------------------------------------------------------------->
+<h4 class="card-title"><b>Application Details</b></h4>
+
+               <table class="table table-bordered table-condensed">
+                      <tbody>                        
+                         <tr>
+                            <td>Leave Type:</td>
+                            <td><?php echo $staffdet['leavetype']; ?></td>
+                         </tr>
+
+                         <tr>
+                            <td>Applied Start Date:</td>
+                              <td>
+                                   <?php
+                                     $stdate = date_create($staffdet['startdate']);
+                                     echo date_format($stdate, "d-M-Y");
+                                   ?>         
+                              </td>
+                          </tr>
+                          
+                          <tr>
+                            <td>Applied End Date</td>
+                            <td>
+                               <?php
+                                  $eddate = date_create($staffdet['enddate']);
+                                  echo date_format($eddate, "d-M-Y");                                                
+                               ?>    
+                            </td>
+                          </tr> 
+                          
+                          <tr>
+                           <td> Days </td>
+                           <td> <?php echo numdays($staffdet['startdate'], $staffdet['enddate']); ?> </td>
+                          </tr>
+                                    
+                                    <tr>
+                                        <td>Reason:</td>
+                                        <td><?php echo $staffdet['reason']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone number:</td>
+                                        <td><?php echo $staffdet['phone']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>Officers to handover to : </b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Officer 1:</td>
+                                        <td><?php echo getname($staffdet['officer1']); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Officer 2:</td>
+                                        <td><?php echo getname($staffdet['officer2']); ?></td>
+                                    </tr>
+                                     <tr>
+                                        <td>Officer 3:</td>
+                                        <td><?php echo getname($staffdet['officer3']); ?></td>
+                                    </tr>                                   
+                                  </tbody>
+                            </table>
+                        <?php  } // end of while loop 
+                           }//end of if statement
+                            else {
+                                echo "No Active Leave Application";
+                            }
+                        ?>
+
+<h4><b>Leave History for Current Year</b></h4>
+<table class="table table-bordered table-condensed">
+  <tr>
+    <th style="width: 50%;">Casual leave days taken</th>
+    <td>4</td>
+    <th>Number to be deducted</th>
+    <td>4</td>
+  </tr>
+
+  <tr>
+    <th>Totals Days Recommended for Annual Leave</th>
+    <td>4</td>
+    <th>Leave Days Entitled</th>
+    <td>4</td>
+  </tr>
+</table>
+
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+</div><!---End of Side bar--->
+<!----------------------------------------------------------------------------------------------------------------------------------------------->
+<div class="col-sm-5">
+      <h4 id="title"><b>Recommendations/Approvals</b></h4>
+  <?php
+       if ($numtr > 0) { //if starts here                 
+              while($rowtr=$stmtr->fetch(PDO::FETCH_ASSOC))
+                 {
+                    //extract row this truns array keys into variables
+  ?>               
+   
+    <h5>
+        <span class="sub-title">
+          <b><?php echo $rowtr['role']; ?></b>
+        </span>
+    </h5>
+    <table class="table table-bordered table-condensed">
+    <tr>
+      <th>Recommended Start Date</th>
+      <td>
+        <?php
+                $resdate = date_create($rowtr['recstartdate']);
+                echo date_format($resdate, "d-M-Y");
+        ?>
+      </td>
+
+      <th>Recommended End Date</th>
+      <td>
+        <?php
+                   $recedate = date_create($rowtr['recenddate']);
+                   echo date_format($recedate, "d-M-Y");
+                ?>
+      </td>
+      <th>Days</th>
+      <td>
+        <?php
+            echo numdays($rowtr['recstartdate'], $rowtr['recenddate']);
+        ?>
+      </td>
+    </tr>
+    <tr>
+      <th>Comment </th>
+      <td colspan="5">
+        <?php
+            echo $rowtr['remarks'];
+        ?>
+      </td>
+    </tr>
+    <tr>
+      <th>Recommendation</th>
+      <td colspan="5">
+         <?php
+             echo $rowtr['status'];
+           ?>
+      </td>
+    </tr>
+  </table>
+        
+<hr style="margin: 0px 0 0px;">
+                    <?php
+                         }//end of while
+                    }//end of if statement
+                    else {
+                        echo "Application in Progress";
+                    }
+                 ?>
+<!----------------------------------------------------------------------------------------------------------------------------------------------------->
+<h5><span class="sub-title">
+
+<?php
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+    
+    #Query for recommendations 
         /*
           Testing each staff id to know which role each staff is to play.
         */
+            if (($staffid == $rego) &&  ($staffcat == 'NTS'))
+            {
+              $recqry = "SELECT recctitle, reccgroup
+                            FROM leaverecommendations
+                            WHERE reccgroup = 2";            
+            }
 
-            if(($staffid == $hodid) || ($staffid == $deanid))
+            else if(($staffid == $hodid) || ($staffid == $deanid) || ($staffid == $rego) || ($staffid == $hro))
             {
                 $recqry = "SELECT recctitle, reccgroup
                             FROM leaverecommendations
                             WHERE reccgroup = 1";              
             } 
-            else if ($staffid == $rego) 
-            {
-              $recqry = "SELECT recctitle, reccgroup
-                            FROM leaverecommendations
-                            WHERE reccgroup = 1 
-                            OR  reccgroup = 2";            
-            }
-            else if ($staffid == $hro) 
-            {
-              $recqry = "SELECT recctitle, reccgroup
-                            FROM leaverecommendations
-                            WHERE reccgroup = 3";              
-            }
+          
             else if ($staffid == $vco) 
             {
               $recqry = "SELECT recctitle, reccgroup
@@ -91,312 +375,392 @@ try {
             $recstmt->execute();
             
             $recnum = $recstmt->rowCount(); 
-        
-        
-    }//end of try
-    catch(PDOException $e){
-         echo "Error: " . $e->getMessage();
-    }//end of catch      
 
-?>
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['hod'] ) 
+    {
+        echo '<b>Make Recommendation</b>';
 
+        echo "</span>";
+        echo "</h5>";
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" type="text/css" href="css/leavedash.css">
-</head>
-<body>
-
-
-<div class="sidenav container-fluid">
-
-  <h3 class="card-title">Application Details</h3>
-
-  <?php
-              if ($num > 0) { //if starts here
+        echo '<div class="row">'; 
+            echo '<table class="table table-condensed">';
+             echo '<tr>';
+               echo '<td>Recommended Start date</td>';
+              
+            while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
+             {   
+               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td>Recommended End date</td>';
+               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
+               echo  '</td>';
+               echo '<td id="datedif"> </td>';
+             }
                     
-                    while($row=$stmtleave->fetch(PDO::FETCH_ASSOC))
-                     {
-                       //extract row this truns array keys into variables
-                      $row1 [] = $row;
-                       extract($row);
+                   echo '</tr>';
+                    echo '</table>';
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td>Comment</td>';
+                        echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>';
+                      echo '</tr>';
+                    echo '</table>';                    
+                    
+                    echo '<input type="hidden" id="role" value="Hod">';                  
+                    
+                    echo '<input type="hidden" id="appno" value="'.$appno.'">';
+                     
+                    echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
 
-  ?>
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td><label>Recommendation</label>';
 
+                          echo '<select id="reco" required>';
+                            echo '<option>Select Recommendation</option>';         
+                              
+                                  if ($recnum > 0) { //if starts here
+                                      
+                                      while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
+                                       {                                                    
+                                          echo '<option value = '.$rowrec["recctitle"].'>'.$rowrec["recctitle"].'</option>'; 
+                                      }// end of while statement
+                                  }//end of if statement  
+                            
+                          echo '</select>'; 
+
+  }
+  else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean'] ) {
+   echo '<b>Make Recommendation</b>';
+   echo "</span>";
+        echo "</h5>";
+
+        echo '<div class="row">'; 
+            echo '<table class="table">';
+             echo '<tr>';
+               echo '<td>Recommended Start date</td>';
+    
+            while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
+              {   
+               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td>Recommended End date</td>';
+               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td id="datecomot">Days '.numdays($lvdate['recstartdate'], $lvdate['recenddate']);
+               echo  '</td>';
+               echo '<td id="datedif"> </td>';
+             }                             
+                   echo '</tr>';
+                    echo '</table>';
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td>Comment</td>';
+                        echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>';
+                      echo '</tr>';
+                    echo '</table>';                    
+                    
+                    echo '<input type="hidden" id="role" value="Dean">';                  
+                    
+                    echo '<input type="hidden" id="appno" value="'.$appno.'">';
+                     
+                    echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
+
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td><label>Recommendation</label>';
+
+                          echo '<select id="reco" required>';
+                            echo '<option>Select Recommendation</option>';         
+                              
+                                  if ($recnum > 0) { //if starts here
+                                      
+                                      while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
+                                       {                                                    
+                                          echo '<option value = '.$rowrec["recctitle"].'>'.$rowrec["recctitle"].'</option>'; 
+                                      }// end of while statement
+                                  }//end of if statement  
+                            
+                          echo '</select>'; 
+
+  }
+  else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['hro'] ) {
+   echo '<b>Make Recommendation</b>';
+   echo "</span>";
+        echo "</h5>";
+
+        echo '<div class="row">'; 
+            echo '<table class="table">';
+             echo '<tr>';
+               echo '<td>Recommended Start date</td>';
+         
+            while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
+              {   
+               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td>Recommended End date</td>';
+               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
+               echo  '</td>';
+               echo '<td id="datedif"> </td>';
+             }                    
+                   echo '</tr>';
+                    echo '</table>';
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td>Comment</td>';
+                        echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>';
+                      echo '</tr>';
+                    echo '</table>';                    
+                    
+                    echo '<input type="hidden" id="role" value="HR">';                  
+                    
+                    echo '<input type="hidden" id="appno" value="'.$appno.'">';
+                     
+                    echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
+
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td><label>Recommendation</label> ';
+
+                          echo ' <select id="reco" required>';
+                            echo '<option>Select Recommendation</option>';         
+                              
+                                  if ($recnum > 0) { //if starts here
+                                      
+                                      while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
+                                       {                                                    
+                                          echo '<option value = '.$rowrec["recctitle"].'>'.$rowrec["recctitle"].'</option>'; 
+                                      }// end of while statement
+                                  }//end of if statement  
+                            
+                          echo '</select>'; 
+
+  }
+
+  else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['rego'] ) {
+   echo ' <b>Make Recommendation/Approval</b>';
+
+   echo "</span>";
+        echo "</h5>";
+
+        echo '<div class="row">'; 
+            echo '<table class="table">';
+             echo '<tr>';
+               echo '<td>Recommended Start date</td>';
+              
+            while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
+              {   
+               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td>Recommended End date</td>';
+               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
+               echo  '</td>';
+               echo '<td id="datedif"> </td>';
+             }
+                      
+                   echo '</tr>';
+                    echo '</table>';
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td>Comment</td>';
+                        echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>';
+                      echo '</tr>';
+                    echo '</table>';                    
+                    
+                    echo '<input type="hidden" id="role" value="Registrar">';                  
+                    
+                    echo '<input type="hidden" id="appno" value="'.$appno.'">';
+                     
+                    echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
+
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td><label>Recommendation</label>';
+
+                          echo '<select id="reco" required>';
+                            echo '<option>Select Recommendation</option>';         
+                              
+                                  if ($recnum > 0) { //if starts here
+                                      
+                                      while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
+                                       {                                                    
+                                          echo '<option value = '.$rowrec["recctitle"].'>'.$rowrec["recctitle"].'</option>'; 
+                                      }// end of while statement
+                                  }//end of if statement  
+                            
+                          echo '</select>'; 
+
+  }
+  else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['vco'] ) {
+    echo '<b>Make Recommendation</b>';
+
+        echo "</span>";
+        echo "</h5>";
+
+        echo '<div class="row">'; 
+            echo '<table class="table">';
+             echo '<tr>';
+               echo '<td>Recommended Start date</td>';
+              
+            while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
+              {   
+               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td>Recommended End date</td>';
+               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
+               echo  '</td>';
+               echo '<td id="datedif"> </td>';
+             }
+                   echo '</tr>';
+                    echo '</table>';
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td>Comment</td>';
+                        echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>';
+                      echo '</tr>';
+                    echo '</table>';                    
+                    
+                    echo '<input type="hidden" id="role" value="VC">';                  
+                    
+                    echo '<input type="hidden" id="appno" value="'.$appno.'">';
+                     
+                    echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
+
+                    echo '<table class="table">';
+                      echo '<tr>';
+                        echo '<td><label>Recommendation</label>';
+
+                          echo '<select id="reco" required>';
+                            echo '<option>Select Recommendation</option>';         
+                              
+                                  if ($recnum > 0) { //if starts here
+                                      
+                                      while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
+                                       {                                                    
+                                          echo '<option value = '.$rowrec["recctitle"].'>'.$rowrec["recctitle"].'</option>'; 
+                                      }// end of while statement
+                                  }//end of if statement  
+                            
+                          echo '</select>'; 
+  }
+?>
+        <!--------------------------cut from here---------------------------------------------------->    
+      </td>
+      <td>
+        <button id="btn-save" class="btn">Save</button>
+      </td>
+      <td>
+        <button>
+          <a style="font-size: 14px;"  href="leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Cancel</a>
+        </button>
+      </td>
+      </tr>
+  </table>  
+</div>
+</div>
+<div id="error"></div>
   
-                        <table class="table table-sm table-borderless table-responsive">
-                        <tbody>
-                          <tr>
-                            <td>Staff Name:</td>
-                              <td>
-                                  <?php 
-                                      echo getname($row['staffid']); //getname() is a function for getting name of staff from the database
-                                  ?>
-                              </td>
-                          </tr>
-                        
-                         <tr>
-                            <td>Leave Type:</td>
-                            <td><?php echo $row['leavetype']; ?></td>
-                         </tr>
-
-                         <tr>
-                            <td>Applied Start Date:</td>
-                              <td>
-                                            <?php
-                                                $stdate = date_create($row['startdate']);
-                                                echo date_format($stdate, "d-M-Y");
-                                            ?>
-                                            
-                              </td>
-                          </tr>
-                          
-                          <tr>
-                                        <td>Applied End Date</td>
-                                        <td>
-                                            <?php
-                                                $eddate = date_create($row['enddate']);
-                                                echo date_format($eddate, "d-M-Y");                                                
-                                            ?>    
-                                         </td>
-                                    </tr> 
-                                    <tr>
-                                        <td> Days </td>
-                                        <td> <?php echo numdays($row['startdate'], $row['enddate']); ?> </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td>Reason:</td>
-                                        <td><?php echo $row['reason']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Phone number:</td>
-                                        <td><?php echo $row['phone']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><b>Officers to handover to : </b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Officer 1:</td>
-                                        <td><?php echo getname($row['officer1']); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Officer 2:</td>
-                                        <td><?php echo getname($row['officer2']); ?></td>
-                                    </tr>
-                                     <tr>
-                                        <td>Officer 3:</td>
-                                        <td><?php echo getname($row['officer3']); ?></td>
-                                    </tr>
-                                    <?php 
-                                    ?>
-                                    <tr>
-                                      <td colspan="2">
-                                       <!--  <input type="submit" value="Add more comment" class="btn btn-default btn-sm" readonly> -->
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>                                       
-                                          <a style="font-size: 14px;"  href='leavedashboard.php?id= <?php echo base64_encode($staffid); ?>'>Cancel</a>
-                                      </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        <?php  } // end of while loop 
-                            }//end of if statement
-                            else {
-                                echo "No Active Leave Application";
-                            }
-                        ?>
 </div>
 
 
-<div class="main">
-<div class="container">
-  
-    <h4 id="title">Recommendations/Approvals</h4>
-    <div id="show-form">
-    <?php
-    if ($chkqrynum > 0) {
-            echo "<h6>You have reviewed this application before</h6>";
-            exit;
-          }
+ <script type="text/javascript">
 
-              if ($numtr > 0) { //if starts here
-                    
-                    while($rowtr=$stmtr->fetch(PDO::FETCH_ASSOC))
-                     {
-                       //extract row this truns array keys into variables
-                       extract($rowtr);
-    ?>
-                 
-    <h5>
-        <span class="sub-title">
-          Supervisor Comment
-        </span>
-    </h5>
-    <div class="row">
-       <p class="col-sm-6">Applied Start Date: 
-        <span class="boder border-l">
-            <?php
-                $resdate = date_create($rowtr['recstartdate']);
-                echo date_format($resdate, "d-M-Y");
-            ?>
-        </span>
-        </p> 
-       <p class="col-sm-6 boder-p">Applied Start Date: 
-            <span class="boder border-r">
-                <?php
-                   $recedate = date_create($rowtr['recenddate']);
-                   echo date_format($recedate, "d-M-Y");
-                ?>
-            </span>
-        </p> 
-    </div>
+     $(document).ready(function(){
+         $("#edate").change(function(ev){
 
-    <div class="row m-b-0em">
-       <p class="col-sm-3">Comment: </p> 
-       <p class="col-sm-9 boder">
-        <?php
-            echo $rowtr['remarks'];
-        ?>
-        </p> 
-    </div>
-    
-    <div class="row m-b-0em">
-       <p class="col-md-3">Recommendation: </p> 
-       <p class="col-md-9 boder">
-           <?php
-             echo "<td>".$rowtr['status']."</td>";
-             
-           ?> 
-       </p> 
-    </div>
+      ev.preventDefault();
 
-    <hr style="margin: 0px 0 0px;">
-                    <?php
-                         }//end of while
-                    }//end of if statement
-                    else {
-                        echo "Application in Progress";
-                    }
-                 ?>
- 
-    </div>
-    <div class="row m-b-1em">
-      <button id="btn-rec" class="col-sm-5 btn btn-default btn-sm"> Click to make recommendation </button> 
-    </div>
+      var sdate = $("#sdate").val();
+      var edate = $("#edate").val();
 
-    <!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-    <!-- Recommendation FORM starts here --> 
-<div class="row rec-submit"></div>
-<div class="row rec-form"> 
-    <legend></legend>  
-    <table class="table table-sm m-b-0em">
-      <tbody>
-        <tr>
-          <?php 
-            echo $row1['sdate'];
-              foreach ($row1 as $vrow) {
-          ?>
-          <td>Recommended Start date <input type="date" id="sdate" value="<?php echo $vrow['sdate'];?>"></td>
-          <td>Recommended End date <input type="date" id="edate" value="<?php echo $vrow['edate']; ?>"></td>
-        <?php } //end of foreach ?>
-          <input type="hidden" id="appno" value='<?php echo $appno; ?>'>
-          <input type="hidden" id="staffid" value='<?php echo $_SESSION['loginid']; ?>'>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="table table-sm row">
-  <tbody>
-    <tr>
-      <td width="50px">Comment</td>
-      <td><textarea class="form-control" id="remarks" rows="2" cols="40" required></textarea></td>
-    </tr>
-    <tr>
-      <td><label>Recommendation</label></td>
-        <td>   
-            <select id="reco" required>
-                          <option value = ''>Select Recommendation</option>         
-            <?php
-                if ($recnum > 0) { //if starts here
-                    
-                    while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
-                     {
-                       //extract row this truns array keys into variables
-                       extract($rowrec);
-            ?>            
-                          <option value = '<?php echo $rowrec["recctitle"]; ?>' > <?php echo $rowrec["recctitle"]; ?> </option>
-            <?php 
-                  }// end of while statement
-                }//end of if statement  
-            ?>
-              </select>
-      </td>
-      <td colspan="2"><button id="btn-save" class="btn btn-default btn-sm">Save</button></td>
-    </tr>  
-  </tbody>
-    </table>                            
-</div><!--End of rec-form-->
-
-</div><!-- End of container-->
-<?php // print_r($stmtr->errorInfo()); ?>
-
-</div><!-- end of main div-->
-
-
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.js"></script> 
-    <script type="text/javascript">
-
-        $(document).ready(function(){
-          
-          $('.goback').click(function() {
-            history.back();
-          });   
-
-        $('#btn-rec').click(function(){
-
-          $('.rec-form').slideToggle();
-         
-        });
-
-        $('#btn-save').click(function(){
-            $('.rec-form').hide();
-            
-            var appno = $('#appno').val();
-            var staffid = $('#staffid').val();
-            var sdate = $('#sdate').val();
-            var edate = $('#edate').val();
-            var remarks = $('#remarks').val();
-            var reco = $('#reco').val();
-
-            var encappno = window.btoa(appno);
-
-            var url = "leavedash.php?appno="+encappno;
-
-            //alert(reason + edate + sdate + reco);
-
-            $('#show-form').load('leaverec.php', {
-                appno: appno,
-                staffid:staffid,
-                sdate: sdate,
-                edate: edate,
-                remarks: remarks,
-                reco: reco
-            }, 
-             function(){
-                $(location).attr('href', url);
-             });
-
-
-        });
+      $.ajax({
+        type: "POST",
+        url: "datediff.php",
+        data: {
+            sdate:sdate,
+            edate:edate
+        },
+        dataType: "text",
+            success: function(res) {
+                //alert(data);
+                //$("#message").html(data);
+                
+                //$("#datedif").addClass("adiff");
+                $('#datecomot').hide();
+                $('#datedif').show();
+                $('#datedif').html(res);
+              },
+            error: function(data) {
+                $("#message").html(data);
+                $("p").addClass("alert alert-danger");
+            },
       });
-    </script>
-     
+    
+      //alert("The text has been changed.");
+  });
+          
+  $('.goback').click(function() {
+       history.back();
+   });   
+
+
+  $('#btn-save').click(function(){
+           // $('.rec-form').hide();
+          
+      var appno = $('#appno').val();
+      var staffid = $('#staffid').val();
+      var sdate = $('#sdate').val();
+      var edate = $('#edate').val();
+      var remarks = $('#remarks').val();
+      var reco = $('#reco').val();
+      var role = $('#role').val();
+
+      var encappno = window.btoa(staffid);
+
+      var url = "leavedashboard.php?id="+encappno;            
+
+      if ((appno == '') || (staffid == '') || (sdate == '') || (edate == '') || (remarks == '') || (reco == '') )
+      {
+         alert("There is a missing field somewhere.");
+      }
+
+      if (reco == 'Approved') {
+         $('#error').load('leaveapprove.php', {
+             appno: appno,
+             staffid:staffid,
+             sdate: sdate,
+             edate: edate,
+             remarks: remarks,
+             reco: reco,
+             role: role
+          }, 
+         function(){
+             $(location).attr('href', url);
+        });
+               
+      }//end of if reco
+            
+     else {        
+
+        //alert(reason + edate + sdate + reco);
+
+        $('#error').load('leaverec.php', {
+            appno: appno,
+            staffid:staffid,
+            sdate: sdate,
+            edate: edate,
+            remarks: remarks,
+            reco: reco,
+            role: role
+         }, 
+        function(){
+          alert("Recommendation Saved");
+          $(location).attr('href', url);
+        });
+    }//end of else
+
+  });
+});
+</script>
 </body>
-</html> 
+</html>

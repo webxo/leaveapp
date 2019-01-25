@@ -77,8 +77,9 @@ $datecreated = date('Y-m-d H:i:s');
 $timeviewed = date('Y-m-d H:i:s');
 $appno = serAppno();
 //$appno = appNo(9);
-$leavestatus = "SUBMITTED";
+$leavestatus = "Submitted";
 $transactionid = 1;
+$role = "Applicant";//role of the staff as at the point of leave application
 //$staffid = $_SESSION['loginid'];
 
 //$_SESSION['username'] ? $_SESSION['username'] : $_GET['id'] ;
@@ -107,15 +108,16 @@ $stmt->bindparam(':leavestatus', $leavestatus);
 $stmt->bindparam(':datecreated', $datecreated);
 
 
- //try {
+
 
 if($stmt->execute())
 		{
-				$query1 = "INSERT INTO leavetransaction (appno, tstaffid, transactionid, timeviewed, comment, status, recstartdate, recenddate) VALUE (:appno, :tstaffid, :transactionid, :timeviewed, :comment, :leavestatus, :startdate, :enddate)";
+				$query1 = "INSERT INTO leavetransaction (appno, tstaffid, role, transactionid, timeviewed, comment, status, recstartdate, recenddate) VALUE (:appno, :tstaffid, :role, :transactionid, :timeviewed, :comment, :leavestatus, :startdate, :enddate)";
 				$stmt1 = $con -> prepare($query1);
 
 				$stmt1->bindparam(':appno', $appno);
 				$stmt1->bindparam(':tstaffid', $staffid);
+        $stmt1->bindparam(':role', $role);
 				$stmt1->bindparam(':transactionid', $transactionid);
 				$stmt1->bindparam(':timeviewed', $timeviewed);
 				$stmt1->bindparam(':comment', $reason);

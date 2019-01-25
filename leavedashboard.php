@@ -49,13 +49,14 @@ $deanid = $_SESSION["staffdetails"]['dean'];
                     echo ' <a href="leaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
                 }
                 if ($_SESSION['staffdetails']['hro'] == $id) {
-                     echo ' <a href="leaveview.php?hrid='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
+                     echo ' <a href="leaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
+                     echo ' <a href="approvedleaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Approved Leave</a>';
                 }
                 if ($_SESSION['staffdetails']['rego'] == $id) {
-                    echo ' <a href="leaveview.php?hrid='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
+                    echo ' <a href="leaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
                 }
                 if ($_SESSION['staffdetails']['vco'] == $id) {
-                    echo ' <a href="leaveview.php?hrid='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
+                    echo ' <a href="leaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
                 }
 
 

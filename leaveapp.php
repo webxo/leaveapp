@@ -66,9 +66,9 @@ if(isHod($_SESSION['loginid'])){
   width: 100px;
   height: 40px;
   padding: 3px;
-  margin-left: 10px;
-  
+  margin-left: 10px;  
 }
+
 .dialog{
 	display: none;
 }
@@ -165,11 +165,10 @@ if(isHod($_SESSION['loginid'])){
                        
             ?>
 			</div>
-          </div>
-
-          
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textinput">Officer 2</label>
+  </div>
+     
+<div class="form-group">
+    <label class="col-sm-3 control-label" for="textinput">Officer 2</label>
             <div class="col-sm-9">
 				<select name="officer2" id="officer2" class="form-control" required>
 
@@ -207,8 +206,8 @@ if(isHod($_SESSION['loginid'])){
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <div class="pull-right">
-                <a class="btn btn-default" href='redrect.php?id= <?php echo base64_encode($staffid); ?>'>Cancel</a>
-                 <button type="submit" class="btn btn-default" id="apply">Submit</button>
+                <a class="btn btn-default" href='leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>'>Cancel</a>
+                 <button type="submit" class="btn" id="apply">Submit</button>
               </div>
             </div>
           </div>

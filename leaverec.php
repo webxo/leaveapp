@@ -4,7 +4,7 @@
 Developer: Ekunkoya Isaiah
 Site:      ekunkoya.com.ng
 Script:    Inserts data into transaction table
-File:      leavetrack.php
+File:      leaverec.php
 For every appno entrying this file, the transactionid increases by 1.
 */
 
@@ -13,11 +13,6 @@ require_once "leavefunction.php";
 
 extract($_POST);
 
-//get appno of leave application
-
-
-//get staffid
-//$staffid = randomID(6);
 
 //get transaction id for the current application stream 
 $track = trackid($appno); //this is the transactionid which will later be increased by 1
@@ -32,8 +27,8 @@ $timeviewed = date('Y-m-d H:i:s');
 
 //get status
 
-		$qry = "INSERT INTO leavetransaction (appno, tstaffid, transactionid, timeviewed, status, recstartdate, recenddate, remarks) 
-				VALUES (:appno, :staffid, :transactionid, :timeviewed, :status, :recstartdate, :recenddate, :remarks)";
+		$qry = "INSERT INTO leavetransaction (appno, tstaffid, role, transactionid, timeviewed, status, recstartdate, recenddate, remarks) 
+				VALUES (:appno, :staffid, :role, :transactionid, :timeviewed, :status, :recstartdate, :recenddate, :remarks)";
 
         // prepare query for excecution
         $stmtu = $con->prepare($qry);
@@ -41,6 +36,7 @@ $timeviewed = date('Y-m-d H:i:s');
         // bind the parameters
         $stmtu->bindParam(':appno', $appno);
         $stmtu->bindParam(':staffid', $staffid);
+        $stmtu->bindParam(':role', $role);
         $stmtu->bindParam(':transactionid', $transactionid);
         $stmtu->bindParam(':timeviewed', $timeviewed);
         $stmtu->bindParam(':status', $reco);
@@ -56,20 +52,7 @@ $timeviewed = date('Y-m-d H:i:s');
 
 		if($stmtu->execute())
 		{
-			$message = '<div class="row">
-		       				<p class="col-sm-6">Applied Start Date: <span class="boder border-l">'.$dbegin.'<span></p>
-		       					<p class="col-sm-6 boder-p">Applied Start Date: <span class="boder border-r">'.$dend.'<span></p>
-		    			</div>';
-
-		    $message .= '<div class="row m-b-0em">
-		    		       <p class="col-sm-3">Comment: </p> 
-		    		       <p class="col-sm-9 boder">'.$remarks.'</p> 
-		    		    </div>';
-		   $message .=  '<div class="row m-b-0em">
-		    		       <p class="col-md-3">Recommendation: </p> 
-		    		       <p class="col-md-9 boder">Approved</p> 
-		    		    </div>';
-
+			$message = "Query Submitted";
 		   echo $message;
  		}//end of if
 		else 
