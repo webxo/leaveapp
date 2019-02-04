@@ -35,8 +35,8 @@ $deanid = $_SESSION["staffdetails"]['dean'];
                 $id = base64_decode($_GET['id']);
             {
 
-                echo '<a href="leavestatus.php?id='.base64_encode($id).'" class="btn btn-default">View Application Status</a>';
-                echo ' <a href="leaveresume.php?id='.base64_encode($id).'" class="btn btn-default">Resume Work</a>'; 
+                echo '<a href="leavestatus.php?id='.base64_encode($id).'" class="btn btn-default">View Application Status</a> ';
+                echo ' <a href="resume.php?id='.base64_encode($id).'" class="btn btn-default">Resume Work</a>'; 
 
                 if ($hodid == $id) {
                     echo "HOD";                       
