@@ -52,8 +52,24 @@ $timeviewed = date('Y-m-d H:i:s');
 
 		if($stmtu->execute())
 		{
-			$message = "Query Submitted";
-		   echo $message;
+                $qry1 = "UPDATE leaveapplication 
+                          SET leavestatus = :leavestatus, leavestageid = :stage
+                            WHERE appno = :appno";
+
+                // prepare query for excecution
+                $stmt1 = $con->prepare($qry1);     
+
+                // bind the parameters
+                $stmt1->bindParam(':leavestatus', $reco);
+                $stmt1->bindParam(':stage', $stage);
+                $stmt1->bindParam(':appno', $appno);
+    
+                if($stmt1->execute());
+                {
+                    $message = "Query Submitted";
+                    echo $message;
+                }
+
  		}//end of if
 		else 
 		{

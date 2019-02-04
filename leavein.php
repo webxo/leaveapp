@@ -78,6 +78,7 @@ $timeviewed = date('Y-m-d H:i:s');
 $appno = serAppno();
 //$appno = appNo(9);
 $leavestatus = "Submitted";
+$leavestageid = 1;
 $transactionid = 1;
 $role = "Applicant";//role of the staff as at the point of leave application
 //$staffid = $_SESSION['loginid'];
@@ -90,8 +91,8 @@ $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 if(count($formerror) == 0 ) //test for errors in the form
 {
 
-$stmt = $con->prepare("INSERT INTO leaveapplication(staffid, appno, leavetype, reason, startdate, enddate, location, phone, officer1,officer2, officer3, leavestatus, datecreated) 
-						VALUES(:staffid, :appno, :leavetype, :reason, :startdate, :enddate, :location, :phone, :officer1, :officer2, :officer3, :leavestatus, :datecreated )");
+$stmt = $con->prepare("INSERT INTO leaveapplication(staffid, appno, leavetype, reason, startdate, enddate, location, phone, officer1,officer2, officer3, leavestatus, leavestageid, datecreated) 
+						VALUES(:staffid, :appno, :leavetype, :reason, :startdate, :enddate, :location, :phone, :officer1, :officer2, :officer3, :leavestatus, :leavestageid, :datecreated )");
 
 $stmt->bindparam(':staffid', $staffid);
 $stmt->bindparam(':appno', $appno);
@@ -105,6 +106,7 @@ $stmt->bindparam(':officer1', $officer1);
 $stmt->bindparam(':officer2', $officer2);
 $stmt->bindparam(':officer3', $officer3);
 $stmt->bindparam(':leavestatus', $leavestatus);
+$stmt->bindparam(':leavestageid', $leavestageid);
 $stmt->bindparam(':datecreated', $datecreated);
 
 

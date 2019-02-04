@@ -35,10 +35,7 @@ if(isHod($_SESSION['loginid'])){
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-
-
-
+<title></title>
 
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">

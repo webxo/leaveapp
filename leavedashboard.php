@@ -4,13 +4,10 @@ include "leavefunction.php";
 checkSession();
 
 print_r($_SESSION['staffdetails']);
-
   
 $hodid = $_SESSION["staffdetails"]['hod'];
 $cat = $_SESSION["staffdetails"]['category'];
 $deanid = $_SESSION["staffdetails"]['dean'];
-
-
    
 ?>
  
@@ -38,7 +35,8 @@ $deanid = $_SESSION["staffdetails"]['dean'];
                 $id = base64_decode($_GET['id']);
             {
 
-                echo '<a href="leavestatus.php?id='.base64_encode($id).'" class="btn btn-default">View Application Status</a>'; 
+                echo '<a href="leavestatus.php?id='.base64_encode($id).'" class="btn btn-default">View Application Status</a>';
+                echo ' <a href="leaveresume.php?id='.base64_encode($id).'" class="btn btn-default">Resume Work</a>'; 
 
                 if ($hodid == $id) {
                     echo "HOD";                       
@@ -51,6 +49,8 @@ $deanid = $_SESSION["staffdetails"]['dean'];
                 if ($_SESSION['staffdetails']['hro'] == $id) {
                      echo ' <a href="leaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';
                      echo ' <a href="approvedleaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Approved Leave</a>';
+                      echo ' <a href="releasedleaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Released Leave</a>';
+
                 }
                 if ($_SESSION['staffdetails']['rego'] == $id) {
                     echo ' <a href="leaveview.php?id='.base64_encode($id).'" class="btn btn-default">View Pending Applications</a>';

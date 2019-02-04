@@ -213,9 +213,10 @@
 		</div>	
 		<!-- End of title  -->
 		
-		
-		<div class="row">
-			<div class="col-md-1"></div>
+		<p style="text-align: right;">
+			<button onclick="goBack()" class="btn btn-default">Back to dashboard</button>
+		</p>
+	<div class="row">
             <table class="table-sm">
 					<tr>
 						<th> No</th>

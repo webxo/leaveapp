@@ -33,20 +33,20 @@
 <body>
 <div class="container">
     <div class="row hed" >
-      <div class="col-md-3"></div>
+      <div class="col-md-5"></div>
       <h3 class="h3">
       
       <?php 
-         echo "Approved Leave Application";
+         echo "Released Leave";
       ?> 
         </h3>
-    </div>
-</div> 
+    </div>  
     <!-- End of title  -->
-
+</div>
+    
 <div class="container">
     <div class="row">
-      <div class="col-md-1"></div>
+      <div class="col-md-3"></div>
           <table class="table-sm ">
        
 <?php 
@@ -58,11 +58,10 @@ if(isset($_GET['id']))
      try 
       {
         #Query to select leave details of the $this staff
-          $query ="SELECT st.fname, st.sname, st.dept, al.staffid, al.appno, al.leavetype, al.apstartdate, al.apenddate, al.location, al.phone, al.releaseddate
+          $query ="SELECT st.fname, st.sname, st.dept, al.staffid, al.appno, al.leavetype, al.apstartdate, al.apenddate, al.location, al.phone, al.releaseddate, al.resumeddate
                     FROM approvedleaves AS al
                     INNER JOIN stafflst AS st
-                    ON st.staffid = al.staffid 
-                    WHERE al.releaseddate = ''       
+                    ON st.staffid = al.staffid        
                     ORDER BY al.appno DESC";
 
 
@@ -90,6 +89,7 @@ if(isset($_GET['id']))
             echo "<th> Location</th>";
             echo  "<th> Phone</th>";
             echo  "<th> Release Date</th>";
+            echo  "<th> Resumption Date</th>";
             echo "<th> Action</th>";
          echo "</tr>";
  
@@ -115,12 +115,13 @@ if(isset($_GET['id']))
                       echo "<td>".$row['location']."</td>";
                       echo "<td>".$row['phone']."</td>";
                       echo "<td>".$row['releaseddate']."</td>";
+                      echo "<td>".$row['resumeddate']."</td>";
                       //echo "<td>".$row['status']."</td>";
                       
                       echo "<td>";
                           //view a single record
                       $appno = $row['appno'];
-                      echo '<a href="approvedleavedash.php?appno='.base64_encode($appno).'" class="btn btn-sm m-r-0em">Review</a>';
+                      echo '<a href="releasedleavedash.php?appno='.base64_encode($appno).'" class="btn btn-sm m-r-0em">View Details</a>';
                           //link to update record
                       echo "</td>";
                   echo "</tr>";
@@ -128,7 +129,7 @@ if(isset($_GET['id']))
                 }//end of if statement for printing results into tables 
         else {
           echo "<tr>";
-                    echo "<td colspan=\"14\"> Waiting for leaves to be approved.</td>";
+                    echo "<td colspan=\"14\"> No Staff Applied for leave yet</td>";
           echo "</tr>";
         } 
      echo "</table>";
@@ -140,16 +141,14 @@ if(isset($_GET['id']))
 
     <!-- End of table list -->
     <div>&nbsp;</div>
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
 
   <p style="text-align: right;">
-      <button onclick="goBack()" class="btn btn-default">Back to dashboard</button>
+    <button>
+          <a style="font-size: 14px;" href="leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Dashboard</a>
+        </button>
+      <!-- <button onclick="goBack()" class="btn btn-default">Back to dashboard</button> -->
   </p>
 </div>
-
-</div>
-
 
   <script src="js/jquery-slim.min.js"></script>
     <script src="../../dist/js/bootstrap.js"></script>

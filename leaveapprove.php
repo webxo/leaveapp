@@ -64,7 +64,7 @@ $timeviewed = date('Y-m-d H:i:s');
                 $location = $row['location'];
                 $phone = $row['phone'];
         
-      $qry2 = "INSERT INTO approvedleaves (staffid, appno, leavetype, apstartdate, apenddate, location, phone) 
+        $qry2 = "INSERT INTO approvedleaves (staffid, appno, leavetype, apstartdate, apenddate, location, phone) 
               VALUES (:staffId, :appno, :leavetype, :recst, :recend, :location, :phone)";
 
               $stmt1 = $con->prepare($qry2);
@@ -79,7 +79,23 @@ $timeviewed = date('Y-m-d H:i:s');
 
               if($stmt1->execute());
               {
-                echo "Query Inserted";
+                $qry3 = "UPDATE leaveapplication 
+                          SET leavestatus = :leavestatus, leavestageid = :stage
+                            WHERE appno = :appno";
+
+                // prepare query for excecution
+                $stmt3 = $con->prepare($qry3);     
+
+                // bind the parameters
+                $stmt3->bindParam(':leavestatus', $reco);
+                $stmt3->bindParam(':stage', $stage);
+                $stmt3->bindParam(':appno', $appno);
+    
+                if($stmt3->execute());
+                {
+                    $message = "Query Submitted";
+                    echo $message;
+                }
               }
 
   }//end of if

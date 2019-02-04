@@ -255,7 +255,7 @@ try {
 </div><!---End of Side bar--->
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="col-sm-4">
-  <h4 id="title"><b>Release Applicant</b></h4>
+  <h4 id="title"><b>Applicant Release Details</b></h4>
   
 <!----------------------------------------------------------------------------------------------------------------------------------------------------->
 <h5><span class="sub-title">
@@ -291,11 +291,7 @@ try {
                       echo '</tr>';
                     echo '</table>';                    
             }//end of while    
-                    //role
-                    echo '<input type="hidden" id="role" value="HR">';
-                    //stage 
-                    echo '<input type="hidden" id="stage" value="4">';
-
+                    echo '<input type="hidden" id="role" value="HR">'; 
                         echo '<td><label>Release Options</label> ';
                         echo '<input type="hidden" id="appno" value="'.$appno.'">';
                          echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
@@ -306,7 +302,7 @@ try {
                                       
                                       while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
                                        {                                                    
-                                          echo '<option value = "'.$rowrec["recctitle"].'">'.$rowrec["recctitle"].'</option>'; 
+                                          echo '<option value = "'.$rowrec["recctitle"].'" disabled>'.$rowrec["recctitle"].'</option>'; 
                                       }// end of while statement
                                   }//end of if statement  
                             
@@ -322,7 +318,7 @@ try {
       </td> -->
       <td>
         <button>
-          <a style="font-size: 14px;" href="leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Cancel</a>
+          <a style="font-size: 14px;" href="releasedleaveview.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Back</a>
         </button>
       </td>
       </tr>
@@ -347,7 +343,6 @@ try {
             var remarks = $('#remarks').val();
             var reco = $('#reco').val();
             var role = $('#role').val();
-            var stage = $('#stage').val();
 
             alert(appno+staffid+sdate+edate+remarks+reco+role);
 
@@ -367,8 +362,7 @@ try {
                       edate: edate,
                       remarks: remarks,
                       reco: reco,
-                      role: role,
-                      stage: stage
+                      role: role
                  }, 
                  function(){
                       alert("Approval Sent");

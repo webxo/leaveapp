@@ -62,8 +62,24 @@ $qry = "INSERT INTO leavetransaction (appno, tstaffid, role, transactionid, time
     
         if($stmt1->execute());
           {
-             echo "Query Inserted";
-          }
+            $qry3 = "UPDATE leaveapplication 
+                          SET leavestatus = :leavestatus, leavestageid = :stage
+                            WHERE appno = :appno";
+
+                // prepare query for excecution
+                $stmt3 = $con->prepare($qry3);     
+
+                // bind the parameters
+                $stmt3->bindParam(':leavestatus', $reco);
+                $stmt3->bindParam(':stage', $stage);
+                $stmt3->bindParam(':appno', $appno);
+    
+                if($stmt3->execute());
+                {
+                    $message = "Query Submitted";
+                    echo $message;
+                }
+          }//end of if stmt1
 
   }//end of if
     else 
@@ -136,9 +152,24 @@ $timeviewed = date('Y-m-d H:i:s');
 
     if($stmtu->execute())
     {
-      $message = "Query Submitted";
-       echo $message;
-    }//end of if
+      $qry3 = "UPDATE leaveapplication 
+                SET leavestatus = :leavestatus, leavestageid = :stage
+                  WHERE appno = :appno";
+
+                // prepare query for excecution
+                $stmt3 = $con->prepare($qry3);     
+
+                // bind the parameters
+                $stmt3->bindParam(':leavestatus', $reco);
+                $stmt3->bindParam(':stage', $stage);
+                $stmt3->bindParam(':appno', $appno);
+    
+                if($stmt3->execute());
+                {
+                    $message = "Query Submitted";
+                    echo $message;
+                }
+    }//end of if stmtu
     else 
     {
       $error="Not Inserted,Some Problem occur.";
@@ -192,9 +223,24 @@ $timeviewed = date('Y-m-d H:i:s');
 
     if($stmtu->execute())
     {
-      $message = "Query Submitted";
-       echo $message;
-    }//end of if
+      $qry3 = "UPDATE leaveapplication 
+                SET leavestatus = :leavestatus, leavestageid = :stage
+                  WHERE appno = :appno";
+
+                // prepare query for excecution
+                $stmt3 = $con->prepare($qry3);     
+
+                // bind the parameters
+                $stmt3->bindParam(':leavestatus', $reco);
+                $stmt3->bindParam(':stage', $stage);
+                $stmt3->bindParam(':appno', $appno);
+    
+                if($stmt3->execute());
+                {
+                    $message = "Query Submitted";
+                    echo $message;
+                }
+    }//end of if stmtu
     else 
     {
       $error="Not Inserted,Some Problem occur.";

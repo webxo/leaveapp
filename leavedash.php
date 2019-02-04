@@ -1,9 +1,9 @@
 <?php
 
-include 'config/database.php';
-include 'leavefunction.php';
+  include 'config/database.php';
+  include 'leavefunction.php';
 
-checksession();
+  checksession();
 
   $staffid = $_SESSION['staffdetails']['staffid'];
   $dept = $_SESSION['staffdetails']['dept'];
@@ -15,28 +15,29 @@ checksession();
   $rego = $_SESSION['staffdetails']['rego'];
   $vco = $_SESSION['staffdetails']['vco'];
 
-$appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
+  $appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
 
 try {
         #A QUICK QUERY TO CHECK IF A SUPERVISOR HAS ACTED ON AN APPLICATION
-    $chkdtqry = "SELECT recstartdate, recenddate FROM leavetransaction 
-                 WHERE appno = '$appno' 
-                 ORDER BY `sn` DESC
-                 LIMIT 1";
+        $chkdtqry = "SELECT recstartdate, recenddate FROM leavetransaction 
+                     WHERE appno = '$appno' 
+                     ORDER BY `sn` DESC
+                     LIMIT 1";
 
         $chkstmt1 = $con->prepare($chkdtqry);
         $chkstmt1->execute();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   #A QUICK QUERY TO CHECK IF A SUPERVISOR HAS ACTED ON AN APPLICATION
-    $chkqry = "SELECT * FROM leavetransaction 
-               WHERE appno LIKE '$appno' 
-               AND tstaffid LIKE '$staffid' ORDER BY `sn` ASC";
+        $chkqry = "SELECT * FROM leavetransaction 
+                   WHERE appno LIKE '$appno' 
+                   AND tstaffid LIKE '$staffid' ORDER BY `sn` ASC";
 
         $chkstmt = $con->prepare($chkqry);
         $chkstmt->execute();
         
         $chkqrynum = $chkstmt->rowCount();
         $datenum = $chkstmt->rowCount();
+        $supnum = $chkstmt->rowCount();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #Query to select leave details of the $this staff
@@ -67,7 +68,7 @@ try {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         
-    }//end of try
+  }//end of try
     catch(PDOException $e){
          echo "Error: " . $e->getMessage();
     }//end of catch      
@@ -84,7 +85,7 @@ try {
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <style>
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-    .row.content {height: 1500px}
+    .row.content {height: 100%}
     
     /* Set gray background color and 100% height */
     .sidenav {
@@ -275,6 +276,16 @@ try {
 </div><!---End of Side bar--->
 <!----------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="col-sm-5">
+  <?php 
+
+      if ($supnum) {//this to check if any of the supervisors have made a recommendation or review of the current leave application
+          echo '<b>You have already made recommendation on this application</b>';
+          echo '&nbsp; <button><a style="font-size: 14px;"  href="leaveview.php?id='.base64_encode($staffid).'">Back</a>
+        </button>';
+          exit();
+        }//end of $supnum
+
+  ?>
       <h4 id="title"><b>Recommendations/Approvals</b></h4>
   <?php
        if ($numtr > 0) { //if starts here                 
@@ -369,8 +380,6 @@ try {
                             WHERE reccgroup = 2";             
             }
 
-
-
             $recstmt = $con->prepare($recqry);
             $recstmt->execute();
             
@@ -378,7 +387,9 @@ try {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['hod'] ) 
-    {
+      {
+        
+
         echo '<b>Make Recommendation</b>';
 
         echo "</span>";
@@ -408,7 +419,10 @@ try {
                       echo '</tr>';
                     echo '</table>';                    
                     
-                    echo '<input type="hidden" id="role" value="Hod">';                  
+                    //role
+                    echo '<input type="hidden" id="role" value="Hod">';
+                    //stage
+                    echo '<input type="hidden" id="stage" value="2">';                  
                     
                     echo '<input type="hidden" id="appno" value="'.$appno.'">';
                      
@@ -431,8 +445,10 @@ try {
                             
                           echo '</select>'; 
 
-  }
-  else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean'] ) {
+    }
+
+else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean']) {
+
    echo '<b>Make Recommendation</b>';
    echo "</span>";
         echo "</h5>";
@@ -460,7 +476,11 @@ try {
                       echo '</tr>';
                     echo '</table>';                    
                     
-                    echo '<input type="hidden" id="role" value="Dean">';                  
+                    //role of reviewing staff
+                    echo '<input type="hidden" id="role" value="Dean">';   
+
+                    //stage of leave application process
+                    echo '<input type="hidden" id="stage" value="3">';               
                     
                     echo '<input type="hidden" id="appno" value="'.$appno.'">';
                      
@@ -484,7 +504,10 @@ try {
                           echo '</select>'; 
 
   }
-  else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['hro'] ) {
+
+ else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['hro'] ) {
+
+
    echo '<b>Make Recommendation</b>';
    echo "</span>";
         echo "</h5>";
@@ -512,7 +535,11 @@ try {
                       echo '</tr>';
                     echo '</table>';                    
                     
-                    echo '<input type="hidden" id="role" value="HR">';                  
+                    //role of review officer
+                    echo '<input type="hidden" id="role" value="HR">';
+
+                    //stage of leaveapplication process
+                    echo '<input type="hidden" id="stage" value="4">';                  
                     
                     echo '<input type="hidden" id="appno" value="'.$appno.'">';
                      
@@ -538,6 +565,8 @@ try {
   }
 
   else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['rego'] ) {
+
+
    echo ' <b>Make Recommendation/Approval</b>';
 
    echo "</span>";
@@ -567,8 +596,12 @@ try {
                       echo '</tr>';
                     echo '</table>';                    
                     
+                    //role
                     echo '<input type="hidden" id="role" value="Registrar">';                  
                     
+                    //stage
+                    echo '<input type="hidden" id="stage" value="5">';
+
                     echo '<input type="hidden" id="appno" value="'.$appno.'">';
                      
                     echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
@@ -592,7 +625,9 @@ try {
 
   }
   else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['vco'] ) {
-    echo '<b>Make Recommendation</b>';
+
+    
+    echo '<b>Make Approval</b>';
 
         echo "</span>";
         echo "</h5>";
@@ -620,8 +655,12 @@ try {
                       echo '</tr>';
                     echo '</table>';                    
                     
+                    //role
                     echo '<input type="hidden" id="role" value="VC">';                  
                     
+                    //stage 
+                    echo '<input type="hidden" id="stage" value="6">';
+
                     echo '<input type="hidden" id="appno" value="'.$appno.'">';
                      
                     echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
@@ -631,7 +670,7 @@ try {
                         echo '<td><label>Recommendation</label>';
 
                           echo '<select id="reco" required>';
-                            echo '<option>Select Recommendation</option>';         
+                            echo '<option>Approval Options</option>';         
                               
                                   if ($recnum > 0) { //if starts here
                                       
@@ -651,7 +690,7 @@ try {
       </td>
       <td>
         <button>
-          <a style="font-size: 14px;"  href="leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Cancel</a>
+          <a style="font-size: 14px;"  href="leaveview.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Back To Leave Application List</a>
         </button>
       </td>
       </tr>
@@ -714,6 +753,7 @@ try {
       var remarks = $('#remarks').val();
       var reco = $('#reco').val();
       var role = $('#role').val();
+      var stage = $('#stage').val();
 
       var encappno = window.btoa(staffid);
 
@@ -732,7 +772,8 @@ try {
              edate: edate,
              remarks: remarks,
              reco: reco,
-             role: role
+             role: role,
+             stage: stage
           }, 
          function(){
              $(location).attr('href', url);
@@ -751,7 +792,8 @@ try {
             edate: edate,
             remarks: remarks,
             reco: reco,
-            role: role
+            role: role,
+            stage: stage
          }, 
         function(){
           alert("Recommendation Saved");
