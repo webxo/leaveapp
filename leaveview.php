@@ -368,7 +368,7 @@ if(isset($_GET['id']))
           ORDER BY lt.timeviewed DESC";
           
         $stmt = $con->prepare($query);
-        $stmt->execute();  
+        $stmt->execute();
 
         $num = $stmt->rowCount();
         

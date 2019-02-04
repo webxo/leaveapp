@@ -50,7 +50,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         //print_r($staffdetails);
 
                         header("location: leavedashboard.php?id=".base64_encode($userid));
-
                         
                         }//end of row if statement
                 } 
