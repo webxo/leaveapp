@@ -1,5 +1,9 @@
 <?php
 
+/*
+This file is the file that manages leaves that have been approved by the VC or Registrar as the case may be.
+*/
+
 include 'config/database.php';
 include 'leavefunction.php';
 
@@ -19,8 +23,8 @@ $appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): head
 
 try {
         #A QUICK QUERY TO CHECK IF A SUPERVISOR HAS ACTED ON AN APPLICATION
-    $chkdtqry = "SELECT recstartdate, recenddate, remarks FROM leavetransaction 
-                 WHERE appno = '$appno' 
+    $chkdtqry = "SELECT recstartdate, recenddate, remarks FROM leavetransaction
+                 WHERE appno = '$appno'
                  ORDER BY `sn` DESC
                  LIMIT 1";
 
@@ -28,13 +32,13 @@ try {
         $chkstmt1->execute();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   #A QUICK QUERY TO CHECK IF A SUPERVISOR HAS ACTED ON AN APPLICATION
-    $chkqry = "SELECT * FROM leavetransaction 
-               WHERE appno LIKE '$appno' 
+    $chkqry = "SELECT * FROM leavetransaction
+               WHERE appno LIKE '$appno'
                AND tstaffid LIKE '$staffid' ORDER BY `sn` ASC";
 
         $chkstmt = $con->prepare($chkqry);
         $chkstmt->execute();
-        
+
         $chkqrynum = $chkstmt->rowCount();
         $datenum = $chkstmt->rowCount();
 
@@ -49,39 +53,39 @@ try {
         $stmtleave = $con->prepare($queryleave);
         $stmtapp = $con->prepare($queryleave);
         $stmtleave->execute();
-        
+
         $num = $stmtleave->rowCount();
-        
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #Query to select leave progress of staff
         $trqry = "SELECT *
                   FROM leavetransaction
-                  WHERE appno = $appno 
+                  WHERE appno = $appno
                   AND transactionid > 1
                   ORDER BY transactionid ASC";
 
         $stmtr = $con->prepare($trqry);
         $stmtr->execute();
-        
-        $numtr = $stmtr->rowCount();  
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+        $numtr = $stmtr->rowCount();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                      $recqry = "SELECT recctitle, reccgroup
                                 FROM leaverecommendations
-                                WHERE reccgroup = 3";            
-                    
+                                WHERE reccgroup = 3";
+
 
                     $recstmt = $con->prepare($recqry);
                     $recstmt->execute();
-                    
+
                     $recnum = $recstmt->rowCount();
 
-        
+
     }//end of try
     catch(PDOException $e){
          echo "Error: " . $e->getMessage();
-    }//end of catch      
+    }//end of catch
 
 ?>
 <!DOCTYPE html>
@@ -96,30 +100,30 @@ try {
   <style>
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
     .row.content {height: 1500px}
-    
+
     /* Set gray background color and 100% height */
     .sidenav {
       background-color: #f1f1f1;
       height: 100%;
     }
-    
+
    table {
     width: 50px;
   }
-    
+
     /* On small screens, set height to 'auto' for sidenav and grid */
     @media screen and (max-width: 767px) {
       .sidenav {
         height: auto;
         padding: 15px;
       }
-      .row.content {height: auto;} 
+      .row.content {height: auto;}
     }
   </style>
 </head>
 <body>
   <?php
-  if ($num > 0) { 
+  if ($num > 0) {
     while($staffdet=$stmtleave->fetch(PDO::FETCH_ASSOC))
         {
     ?>
@@ -144,9 +148,9 @@ try {
         <?php echo $staffdet['post']; ?>
       </td>
       <td>
-        <?php 
+        <?php
           $staffcat = $staffdet['category'];
-          echo $staffdet['category'];  
+          echo $staffdet['category'];
         ?>
       </td>
       <td>
@@ -160,7 +164,7 @@ try {
       </td>
     </tr>
   </table>
-      
+
     </div>
   </div>
 </div>
@@ -173,7 +177,7 @@ try {
 <h4 class="card-title"><b>Application Details</b></h4>
 
                <table class="table table-bordered table-condensed">
-                     <tbody>                        
+                     <tbody>
                          <tr>
                             <td>Leave Type:</td>
                             <td><?php echo $staffdet['leavetype']; ?></td>
@@ -187,21 +191,21 @@ try {
                                                 echo date_format($stdate, "d-M-Y");
                                             ?>
                              </td>
-                        </tr>            
+                        </tr>
                                     <tr>
                                         <td>Applied End Date</td>
                                         <td>
                                             <?php
                                                 $eddate = date_create($staffdet['enddate']);
-                                                echo date_format($eddate, "d-M-Y");                                                
-                                            ?>    
+                                                echo date_format($eddate, "d-M-Y");
+                                            ?>
                                          </td>
-                                    </tr> 
+                                    </tr>
                                     <tr>
                                         <td> Days </td>
                                         <td> <?php echo numdays($staffdet['startdate'], $staffdet['enddate']); ?> </td>
                                     </tr>
-                                    
+
                                     <tr>
                                         <td>Reason:</td>
                                         <td><?php echo $staffdet['reason']; ?></td>
@@ -224,10 +228,10 @@ try {
                                      <tr>
                                         <td>Officer 3:</td>
                                         <td><?php echo getname($staffdet['officer3']); ?></td>
-                                    </tr>                                   
+                                    </tr>
                                   </tbody>
                             </table>
-                        <?php  } // end of while loop 
+                        <?php  } // end of while loop
                            }//end of if statement
                             else {
                                 echo "No Active Leave Application";
@@ -256,7 +260,7 @@ try {
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="col-sm-4">
   <h4 id="title"><b>Release Applicant</b></h4>
-  
+
 <!----------------------------------------------------------------------------------------------------------------------------------------------------->
 <h5><span class="sub-title">
 
@@ -268,20 +272,20 @@ try {
    echo "</span>";
         echo "</h5>";
 
-        echo '<div class="row">'; 
+        echo '<div class="row">';
             echo '<table class="table">';
              echo '<tr>';
                echo '<td><b>Recommended Start date</b></td>';
-         
+
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
-             {     
+             {
                   echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].' readonly></td>';
                   echo '<td><b>Recommended End date</td></b>';
                   echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].' readonly></td>';
                   echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                   echo  '</td>';
                   echo '<td id="datedif"> </td>';
-                               
+
                    echo '</tr>';
                     echo '</table>';
                     echo '<table class="table">';
@@ -289,33 +293,33 @@ try {
                         echo '<td><b>Comment</b></td>';
                         echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" readonly>'.$lvdate["remarks"].'</textarea></td>';
                       echo '</tr>';
-                    echo '</table>';                    
-            }//end of while    
+                    echo '</table>';
+            }//end of while
                     //role
                     echo '<input type="hidden" id="role" value="HR">';
-                    //stage 
+                    //stage
                     echo '<input type="hidden" id="stage" value="4">';
 
                         echo '<td><label>Release Options</label> ';
                         echo '<input type="hidden" id="appno" value="'.$appno.'">';
                          echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
                           echo ' <select id="reco">';
-                            echo '<option>Select Release</option>';         
-                              
+                            echo '<option>Select Release</option>';
+
                                   if ($recnum > 0) { //if starts here
-                                      
+
                                       while($rowrec=$recstmt->fetch(PDO::FETCH_ASSOC))
-                                       {                                                    
-                                          echo '<option value = "'.$rowrec["recctitle"].'">'.$rowrec["recctitle"].'</option>'; 
+                                       {
+                                          echo '<option value = "'.$rowrec["recctitle"].'">'.$rowrec["recctitle"].'</option>';
                                       }// end of while statement
-                                  }//end of if statement  
-                            
-                          echo '</select>'; 
+                                  }//end of if statement
+
+                          echo '</select>';
 
 }
-  
+
 ?>
-        <!--------------------------cut from here---------------------------------------------------->    
+        <!--------------------------cut from here---------------------------------------------------->
     </td>
       <!-- <td>
         <button id="btn-save" class="btn">Release</button>
@@ -326,18 +330,18 @@ try {
         </button>
       </td>
       </tr>
-  </table>  
+  </table>
 </div>
 </div>
 <div id="error"></div>
-  
+
 </div>
 
 
  <script type="text/javascript">
 
         $(document).ready(function(){
-           
+
              $('select#reco').change(function(){
 
             var appno = $('#appno').val();
@@ -353,7 +357,7 @@ try {
 
             var encappno = window.btoa(staffid);
 
-            var url = "leavedashboard.php?id="+encappno;            
+            var url = "leavedashboard.php?id="+encappno;
 
             if ((appno == '') || (staffid == '') || (sdate == '') || (edate == '') || (remarks == '') || (reco == '') )
             {
@@ -369,14 +373,14 @@ try {
                       reco: reco,
                       role: role,
                       stage: stage
-                 }, 
+                 },
                  function(){
                       alert("Approval Sent");
                       $(location).attr('href', url);
-                });         
+                });
 
         });
-            
+
     });
     </script>
 </body>
