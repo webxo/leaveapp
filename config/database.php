@@ -11,6 +11,6 @@
   } catch (PDOException $e) {
     echo "Connection error: ". $e->getMessage();
   }
-
- ?>
 //changed database credentials to be able to upload on heroku.
+ ?>
+
