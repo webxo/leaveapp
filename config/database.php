@@ -13,4 +13,4 @@
   }
 
  ?>
-//changed database credentials to be able to upload on heroku
+//changed database credentials to be able to upload on heroku.
