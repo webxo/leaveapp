@@ -10,7 +10,7 @@ if(isset($_SESSION["staffid"]) && $_SESSION["staffid"] === true){
 */
  
 // Include config file
-require_once "config/database.php";
+include "config/database.php";
 include 'leavefunction.php';
  
 // Define variables and initialize with empty values
