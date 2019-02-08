@@ -12,6 +12,7 @@ if (isset($_GET['id']))
 
 		$name = getname($staffid);
 		
+		echo $_GET['id'];
 		
         //test for the department
 

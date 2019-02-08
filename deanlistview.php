@@ -56,6 +56,7 @@
 		<!-- End of title  -->
 		
 		
+
 		<div class="row">
 			<table class="table table-bordered">
 					<tr>
@@ -85,7 +86,8 @@
 		                  echo "<td>{$appstatus}</td>";
 		                  echo "<td>";
 		                      //view a single record
-		                  echo "<a href='deanupdate.php?id={$staffid}' class='btn btn-info m-r-1em'>View</a>";
+		                  echo "<a href='deanupdate.php?id='".base64_encode($staffid)."' class='btn btn-info m-r-1em'>View</a>";
+		                  //echo "<a href='deanupdate.php?id={$staffid}' class='btn btn-info m-r-1em'>View</a>";
 		                      //link to update record
 		                  echo "</td>";
 		             }//end of while loop

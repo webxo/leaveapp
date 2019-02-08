@@ -1,7 +1,7 @@
 <?php
 include "leavefunction.php";
 //check for session
-checkSession();
+//checkSession();
 
 ?>
  
@@ -38,6 +38,12 @@ checkSession();
         <a href="reglistview.php" class="btn btn-default">Registrar</a>
         <a href="vclistview.php" class="btn btn-default">VC list</a>
         
+        <?php 
+            $name = "Elijah";
+            echo base64_encode($name);
+            echo base64_decode($name); 
+
+        ?>
     </p>
 </body>
 </html>

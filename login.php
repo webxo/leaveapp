@@ -35,9 +35,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM users WHERE username = :username";
+        $sql = "SELECT idno, fname, sname FROM userz WHERE fname = :username";
         
-        if($stmt = $con->prepare($sql)){
+        try{
+            if($stmt = $con->prepare($sql)){
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
             
@@ -49,10 +50,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if($stmt->rowCount() == 1){
                     if($row = $stmt->fetch()){
-                        $id = $row["id"];
-                        $username = $row["username"];
-                        $hashed_password = $row["password"];
-                        if(password_verify($password, $hashed_password)){
+                        $id = $row["idno"];
+                        $username = $row["fname"];
+                        $sname = $row["sname"];
+                        //$hashed_password = $row["password"];
+                        echo $username;
+                        if(password_verify($password, $sname)){
                             // Password is correct, so start a new session
                             session_start();
                             
@@ -76,6 +79,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
+        }//end of try
+        catch(PDOException $e){ $e->getMessage();}
+        
         
         // Close statement
         unset($stmt);
