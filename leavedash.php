@@ -81,11 +81,15 @@ try {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  
+  
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <style>
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-    .row.content {height: 100%}
+    .row.content {height: 1000px;}
     
     /* Set gray background color and 100% height */
     .sidenav {
@@ -117,15 +121,23 @@ try {
     }
   </style>
 </head>
+
+<script>
+  $( function() {
+    $( "#sdate" ).datepicker({dateFormat: 'd-M-y'});
+    $( "#edate" ).datepicker({dateFormat: 'd-M-y'});
+  } );
+</script>
 <body>
-  <?php
+
+<?php
   if ($num > 0) { 
-    while($staffdet=$stmtleave->fetch(PDO::FETCH_ASSOC))
+        while($staffdet=$stmtleave->fetch(PDO::FETCH_ASSOC))
         {
     ?>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-8">
+<div class="row">
+<div class="col-md-8">
         <h3>Applicant Details</h3>
   <table class="table table-bordered table-condensed">
     <tr>
@@ -157,16 +169,12 @@ try {
       </td>
       <td>
         <?php echo $staffdet['kol'];  ?>
-      </td>
+      </td>    
+   </tr>
+ </table>
       
-      
-      
-
-    </tr>
-  </table>
-      
-    </div>
-  </div>
+</div>
+</div>
 </div>
 
 <div class="container-fluid">
@@ -188,7 +196,8 @@ try {
           </button>
         </span>
       </div> -->
-<!------------------------------------------------New Content---------------------------------------------------------------------------------------------->
+<!-----------------------------------------New Content------------------------------------------------------------------------------------------->
+
 <h4 class="card-title"><b>Application Details</b></h4>
 
                <table class="table table-bordered table-condensed">
@@ -401,10 +410,16 @@ try {
                echo '<td>Recommended Start date</td>';
               
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
-             {   
-               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+              {
+                  $rdt = strtotime($lvdate["recstartdate"]);
+                  $rdate1 = date("d-M-y", $rdt); 
+
+                  $redt = strtotime($lvdate["recenddate"]);
+                  $redate1 = date("d-M-y", $redt); 
+
+               echo '<td> <input type="text" id="sdate" value='.$rdate1.'></td>';
                echo '<td>Recommended End date</td>';
-               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td> <input type="text" id="edate" value='.$redate1.'></td>';
                echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                echo  '</td>';
                echo '<td id="datedif"> </td>';
@@ -460,9 +475,9 @@ else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean
     
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
               {   
-               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td> <input type="text" id="sdate" value='.$lvdate["recstartdate"].'></td>';
                echo '<td>Recommended End date</td>';
-               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td> <input type="text" id="edate" value='.$lvdate["recenddate"].'></td>';
                echo '<td id="datecomot">Days '.numdays($lvdate['recstartdate'], $lvdate['recenddate']);
                echo  '</td>';
                echo '<td id="datedif"> </td>';
@@ -519,9 +534,9 @@ else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean
          
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
               {   
-               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td> <input type="text" id="sdate" value='.$lvdate["recstartdate"].'></td>';
                echo '<td>Recommended End date</td>';
-               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td> <input type="text" id="edate" value='.$lvdate["recenddate"].'></td>';
                echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                echo  '</td>';
                echo '<td id="datedif"> </td>';
@@ -579,9 +594,9 @@ else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean
               
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
               {   
-               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td> <input type="text" id="sdate" value='.$lvdate["recstartdate"].'></td>';
                echo '<td>Recommended End date</td>';
-               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td> <input type="text" id="edate" value='.$lvdate["recenddate"].'></td>';
                echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                echo  '</td>';
                echo '<td id="datedif"> </td>';
@@ -639,9 +654,9 @@ else if ($_SESSION['staffdetails']['staffid'] == $_SESSION['staffdetails']['dean
               
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
               {   
-               echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].'></td>';
+               echo '<td> <input type="text" id="sdate" value='.$lvdate["recstartdate"].'></td>';
                echo '<td>Recommended End date</td>';
-               echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].'></td>';
+               echo '<td> <input type="text" id="edate" value='.$lvdate["recenddate"].'></td>';
                echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                echo  '</td>';
                echo '<td id="datedif"> </td>';

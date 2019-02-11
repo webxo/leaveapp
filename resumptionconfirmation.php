@@ -10,6 +10,7 @@ For every appno entrying this file, the transactionid increases by 1.
 
 require_once "config/database.php";
 require_once "leavefunction.php";
+checkSession();
 
 extract($_POST);
 
@@ -25,6 +26,7 @@ $timeviewed = date('Y-m-d H:i:s');
 #comment is gotten from the post variables
 
 //get status
+try{
 
 		$qry = "INSERT INTO leavetransaction (appno, tstaffid, role, transactionid, timeviewed, status, recstartdate, recenddate, remarks) 
 				VALUES (:appno, :staffid, :role, :transactionid, :timeviewed, :status, :recstartdate, :recenddate, :remarks)";
@@ -43,43 +45,40 @@ $timeviewed = date('Y-m-d H:i:s');
         $stmtu->bindParam(':recenddate', $edate); 
         $stmtu->bindParam(':remarks', $remarks);
 
-        //format date to this format 00-Mon-0000
-        $dbegin = date_format(date_create($sdate), "d-M-Y"); //date began
-        $dend = date_format(date_create($edate), "d-M-Y"); //date ending
+        if($stmtu->execute()){
+            
+            $resumed = 1;
+            $rdt = strtotime($rdate);
+             $rdate1 = date("Y-m-d", $rdt);
 
-try {
-
-	if($stmtu->execute())
-		{
-                $qry1 = "UPDATE leaveapplication 
-                          SET leavestatus = :leavestatus, leavestageid = :stage
+            $qry3 = "UPDATE approvedleaves 
+                          SET resumeddate = :rdate, resumed = :resumed
                             WHERE appno = :appno";
 
                 // prepare query for excecution
-                $stmt1 = $con->prepare($qry1);     
+                $stmt3 = $con->prepare($qry3);     
 
                 // bind the parameters
-                $stmt1->bindParam(':leavestatus', $reco);
-                $stmt1->bindParam(':stage', $stage);
-                $stmt1->bindParam(':appno', $appno);
+                $stmt3->bindParam(':rdate', $rdate1);
+                $stmt3->bindParam(':resumed', $resumed);
+                $stmt3->bindParam(':appno', $appno);
     
-                if($stmt1->execute());
+                if($stmt3->execute());
                 {
                     $message = "Query Submitted";
                     echo $message;
+                    print_r($_POST);
                 }
+        }
+        else
+        {
+            echo "Query not inserted";
+           // print_r($_POST);
+        }
 
- 		}//end of if
-		else 
-		{
-		  $error="Not Inserted,Some Problem occur.";
-		  // print_r($stmtu->errorInfo());
-		  //echo json_encode($error);
-		  echo $error;
-		}//end of else statement
- }//end of try
- catch(PDOException $e){
-   	 echo "Error: " . $e->getMessage();
+    }
+        catch(PDOException $e){
+   	            echo "Error: " . $e->getMessage();
  }//end of catch
 
 ?>

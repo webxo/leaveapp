@@ -274,10 +274,16 @@ try {
                echo '<td><b>Recommended Start date</b></td>';
          
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
-             {     
-                  echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].' readonly></td>';
+            {     
+                  $rdt = strtotime($lvdate["recstartdate"]);
+                  $rdate1 = date("d-M-y", $rdt); 
+
+                  $redt = strtotime($lvdate["recenddate"]);
+                  $redate1 = date("d-M-y", $redt); 
+
+                  echo '<td> <input type="date" id="sdate" value='.$rdate1.' readonly></td>';
                   echo '<td><b>Recommended End date</td></b>';
-                  echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].' readonly></td>';
+                  echo '<td> <input type="date" id="edate" value='.$redate1.' readonly></td>';
                   echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                   echo  '</td>';
                   echo '<td id="datedif"> </td>';

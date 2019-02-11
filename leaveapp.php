@@ -37,18 +37,17 @@ if(isHod($_SESSION['loginid'])){
 <head>
 <title></title>
 
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
- <!--  <link rel="stylesheet" href="/resources/demos/style.css"> -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script
-  src="https://code.jquery.com/jquery-3.3.1.js"
-  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-  crossorigin="anonymous">
-</script>
-
-
+  <script>
+  $( function() {
+    $( "#sdate" ).datepicker({dateFormat: 'd-M-y'});
+    $( "#edate" ).datepicker({dateFormat: 'd-M-y'});
+  } );
+  </script>
 
 <!------ Include the above in your HEAD tag ---------->
 <style type="text/css">
@@ -113,12 +112,12 @@ if(isHod($_SESSION['loginid'])){
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Start Date</label>
             <div class="col-sm-3">
-              <input type="date" class="form-control" name="sdate" id="sdate" required>
+              <input type="text" class="form-control" name="sdate" id="sdate" required>
             </div>
 
             <label class="col-sm-3 control-label" for="textinput">End Date</label>
             <div class="col-sm-3">
-              <input type="date" class="form-control" name="edate" id="edate" required>
+              <input type="text" class="form-control" name="edate" id="edate" required>
             </div>
             <p id="datedif"> </p>
           </div>

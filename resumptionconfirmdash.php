@@ -15,7 +15,7 @@
   $rego = $_SESSION['staffdetails']['rego'];
   $vco = $_SESSION['staffdetails']['vco'];
 
-  //$appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
+  $appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
 
 try {
 
@@ -31,7 +31,7 @@ try {
                   ON l.appno = lt.appno
                   INNER JOIN approvedleaves AS ap
                   ON ap.staffid = s.staffid
-                  WHERE l.staffid = '$staffid' 
+                  WHERE l.appno = $appno
                   AND s.category = '$cat'
                   AND ap.resumeddate = ''
                   ORDER BY lt.timeviewed DESC
@@ -60,6 +60,10 @@ try {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <style>
+      .content {
+      width: 1500px;
+      margin: auto;
+    }
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
     .row.content {height: 100%}
     
@@ -84,7 +88,7 @@ try {
 }
     
     /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 1500px) {
       .sidenav {
         height: auto;
         padding: 15px;
@@ -94,6 +98,7 @@ try {
   </style>
 </head>
 <body>
+<div class="content">
 <?php
   if ($num > 0) { 
         while($staffdet = $stmtleave->fetch(PDO::FETCH_ASSOC))
@@ -226,15 +231,20 @@ try {
 </div><!---End of Side bar--->
 <!----------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="col-sm-5">
-       <h4 id="title"><b>Resumption Form</b></h4>       
+       <h4 id="title"><b>Resumption Confirmation Form</b></h4>       
 
       <hr style="margin: 0px 0 0px;">
       
 
     <table class="table table-condensed">  
     <tr>
-      <td>Enter Resumption Date</td>
-      <td><input type="date" class="form-control" name="rdate" id="rdate" required></td>
+      <td>Resumption Date</td>
+        <?php $dayresumed = date_create($staffdet['timeviewed']);  ?>
+      <td><input type="text" class="form-control" name="rdate" id="rdate" value = "<?php echo date_format($dayresumed, "d-M-Y"); ?>" disabled></td>
+    </tr> 
+    <td>Remarks</td>
+        
+      <td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>
     </tr> 
       <tr>
       
@@ -248,7 +258,8 @@ try {
         <?php echo '<input type="hidden" id="staffid" value="'.$staffid.'">'; ?>
       </td>
       <td>
-        <button id="btn-save" class="btn">Save</button>
+        <button id="btn-save" class="btn">Confirm</button>
+        <button id="btn-notconfirmed" class="btn">Not Confirmed</button>
         <button>
           <a style="font-size: 14px;" href="leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Cancel</a>
         </button>
@@ -260,12 +271,15 @@ try {
 
   <?php  } // end of while loop 
        }//end of if statement
+       else
+       {
+        echo "Staff Resumed Already";
+       }
   ?>
 <div id="message"></div>
   
 </div>
-
-
+</div><!--End of div content-->
  <script type="text/javascript">
 
     $(document).ready(function(){
@@ -292,7 +306,7 @@ try {
                 alert("Date cannot be blank");
            }
        //alert(reason + edate + sdate + reco);
-         $('#message').load('resumeleave.php', {
+         $('#message').load('resumptionconfirmation.php', {
                 appno: appno,
                 staffid:staffid,
                 sdate: sdate,
@@ -302,11 +316,11 @@ try {
                 role: role,
                 stage: stage,
                 rdate: rdate
-             }, 
+            }, 
           function(){
-          //  alert("Date Saved");
+          //alert("Date Saved");
                $(location).attr('href', url);
-          });
+           });
         });
     });
 
