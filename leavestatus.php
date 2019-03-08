@@ -32,7 +32,7 @@
                   INNER JOIN leavetransaction AS lt
                   ON l.appno = lt.appno
                   WHERE l.staffid = '$id' AND s.category = '$cat'
-                  ORDER BY lt.timeviewed DESC";
+                  ORDER BY lt.appno DESC";
 
         		  $stmt = $con->prepare($query);
         	      $stmt->execute();  

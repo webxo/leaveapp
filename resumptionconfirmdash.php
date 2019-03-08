@@ -15,7 +15,7 @@
   $rego = $_SESSION['staffdetails']['rego'];
   $vco = $_SESSION['staffdetails']['vco'];
 
-  //$appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
+  $appno  = base64_decode($_GET['appno']); //? base64_decode($_GET['appno']): header("Location:logout.php") ;
 
 try {
 
@@ -31,7 +31,7 @@ try {
                   ON l.appno = lt.appno
                   INNER JOIN approvedleaves AS ap
                   ON ap.staffid = s.staffid
-                  WHERE l.staffid = '$staffid' 
+                  WHERE l.appno = $appno
                   AND s.category = '$cat'
                   AND ap.resumeddate = ''
                   ORDER BY lt.timeviewed DESC
@@ -56,17 +56,10 @@ try {
   <title>Leave Application Dashboard</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( "#rdate" ).datepicker({dateFormat: 'd-M-yy'});
-  } );
-  </script>
-  <style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<style>
     .wrapper{
       padding-left: 300px;
     }
@@ -100,16 +93,17 @@ try {
   </style>
 </head>
 <body>
+
+<div class="wrapper">
 <?php
   if ($num > 0) { 
         while($staffdet = $stmtleave->fetch(PDO::FETCH_ASSOC))
         {
     ?>
-    <div class="wrapper">
 <div class="container-fluid">
 <div class="row">
 <div class="col-md-8">
-        <h3>Applicant Details</h3>
+        <h3><b>Applicant Details</b></h3>
   <table class="table table-bordered table-condensed">
     <tr>
       <th>Staff Name</th>
@@ -152,7 +146,7 @@ try {
   <div class="row content">
     <div class="col-sm-3 sidenav">
 <!------------------------------------------------New Content---------------------------------------------------------------------------------------------->
-<h4 class="card-title"><b>Application Details</b></h4>
+<h4 class="card-title"><b>Leave Approval Details</b></h4>
 
                <table class="table table-bordered table-condensed">
                       <tbody>                        
@@ -162,7 +156,7 @@ try {
                          </tr>
 
                          <tr>
-                            <td>Leave Start Date:</td>
+                            <td>Approved Start Date:</td>
                               <td>
                                    <?php
                                      $stdate = date_create($staffdet['startdate']);
@@ -172,7 +166,7 @@ try {
                           </tr>
                           
                           <tr>
-                            <td>Leave End Date</td>
+                            <td>Approved End Date</td>
                             <td>
                                <?php
                                   $eddate = date_create($staffdet['enddate']);
@@ -186,31 +180,37 @@ try {
                            <td> <?php echo numdays($staffdet['startdate'], $staffdet['enddate']); ?> </td>
                           </tr>
                                     
-                                    <tr>
-                                        <td>Reason:</td>
-                                        <td><?php echo $staffdet['reason']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Phone number:</td>
-                                        <td><?php echo $staffdet['phone']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><b>Officers to handover to : </b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Officer 1:</td>
-                                        <td><?php echo getname($staffdet['officer1']); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Officer 2:</td>
-                                        <td><?php echo getname($staffdet['officer2']); ?></td>
-                                    </tr>
-                                     <tr>
-                                        <td>Officer 3:</td>
-                                        <td><?php echo getname($staffdet['officer3']); ?></td>
-                                    </tr>                                   
-                                  </tbody>
-                            </table>
+                          <tr>
+                            <td>Reason:</td>
+                            <td><?php echo $staffdet['reason']; ?></td>
+                          </tr>
+                          
+                          <tr>
+                            <td>Phone number:</td>
+                            <td><?php echo $staffdet['phone']; ?></td>
+                          </tr>
+                          
+                          <tr>
+                            <td colspan="2"><b>Officers to handover to : </b></td>
+                          </tr>
+                          
+                          <tr>
+                           <td>Officer 1:</td>
+                           <td><?php echo getname($staffdet['officer1']); ?></td>
+                          </tr>
+                          
+                          <tr>
+                           <td>Officer 2:</td>
+                           <td><?php echo getname($staffdet['officer2']); ?></td>
+                          </tr>
+                          
+                          <tr>
+                           <td>Officer 3:</td>
+                           <td><?php echo getname($staffdet['officer3']); ?></td>
+                          </tr>                                  
+
+                        </tbody>
+                    </table>
 
 <h4><b>Leave History for Current Year</b></h4>
 <table class="table table-bordered table-condensed">
@@ -233,29 +233,47 @@ try {
 </div><!---End of Side bar--->
 <!----------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="col-sm-5">
-       <h4 id="title"><b>Resumption Form</b></h4>       
+       <h4 id="title"><b>Resumption Confirmation Form</b></h4>       
 
       <hr style="margin: 0px 0 0px;">
       
 
     <table class="table table-condensed">  
     <tr>
-      <td>Enter Resumption Date</td>
-      <td><input type="text" class="form-control" name="rdate" id="rdate" required></td>
+      <td>Expected Resumption Date</td>
+        <?php  
+            $resdt = date_create(resumptionday($staffdet['enddate']));
+
+        ?>
+      <td><input type="text" class="form-control" name="rdate" id="rdate" value = "<?php echo date_format($resdt, "d-M-Y");   ?>" disabled>
+        </td>
+    </tr> 
+    
+    <tr>
+      <td>Resumption Date</td>
+        <?php $dayresumed = date_create($staffdet['timeviewed']);  ?>
+      <td><input type="text" class="form-control" name="rdate" id="rdate" value = "<?php echo date_format($dayresumed, "d-M-Y"); ?>" disabled>
+        <small><b>Entered by Staff</b></small></td>
+    </tr> 
+
+    <td>Remarks</td>
+        
+      <td><textarea class="form-control" id="remarks" rows="2" cols="80" required></textarea></td>
     </tr> 
       <tr>
       
       <td>
         <?php echo '<input type="hidden" id="appno" value="'.$staffdet['appno'].'">'; ?>
-        <?php echo '<input type="hidden" id="role" value="Applicant">'; ?>
-        <?php echo '<input type="hidden" id="stage" value="1">'; ?>
-        <?php echo '<input type="hidden" id="reco" value="Resumed">'; ?>
+        <?php echo '<input type="hidden" id="role" value="Hod">'; ?>
+        <?php echo '<input type="hidden" id="stage" value="2">'; ?>
+        <?php //echo '<input type="hidden" id="reco" value="Resumed">'; ?>
         <?php echo '<input type="hidden" id="sdate" value="'.$staffdet['recstartdate'].'">'; ?>
         <?php echo '<input type="hidden" id="edate" value="'.$staffdet['recenddate'].'">'; ?>
         <?php echo '<input type="hidden" id="staffid" value="'.$staffid.'">'; ?>
       </td>
       <td>
-        <button id="btn-save" class="btn">Save</button>
+        <button id="btn-save" class="btn">Confirm</button>
+        <button id="btn-notconfirmed" class="btn">Not Confirmed</button>
         <button>
           <a style="font-size: 14px;" href="leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Cancel</a>
         </button>
@@ -267,25 +285,27 @@ try {
 
   <?php  } // end of while loop 
        }//end of if statement
+       else
+       {
+        echo "Staff Resumed Already";
+       }
   ?>
 <div id="message"></div>
   
 </div>
-</div><!--End of wrapper-->
-
+</div><!--End of div content-->
  <script type="text/javascript">
 
     $(document).ready(function(){
      
       $('#btn-save').click(function(){
         //alert('button clicked');
-           
         var appno = $('#appno').val();
         var staffid = $('#staffid').val();
         var sdate = $('#sdate').val();
         var edate = $('#edate').val();
         var remarks = $('#remarks').val();
-        var reco = $('#reco').val();
+        var reco = 'Resumption Confirmed';
         var role = $('#role').val();
         var stage = $('#stage').val();
         var rdate = $('#rdate').val();
@@ -297,9 +317,9 @@ try {
           if (rdate == '')
           {
                 alert("Date cannot be blank");
-          }
-          else {
-            $('#message').load('resumeleave.php', {
+           }
+       //alert(reason + edate + sdate + reco);
+         $('#message').load('resumptionconfirmed.php', {
                 appno: appno,
                 staffid:staffid,
                 sdate: sdate,
@@ -309,16 +329,47 @@ try {
                 role: role,
                 stage: stage,
                 rdate: rdate
-             }, 
+            }, 
           function(){
-          //  alert("Date Saved");
+          //alert("Date Saved");
                $(location).attr('href', url);
-          });
-        }
-       //alert(reason + edate + sdate + reco);
-         
+           });
         });
-    });
+
+      $('#btn-notconfirmed').click(function(){
+
+        var appno = $('#appno').val();
+        var staffid = $('#staffid').val();
+        var sdate = $('#sdate').val();
+        var edate = $('#edate').val();
+        var remarks = $('#remarks').val();
+        var reco = 'Resumption Not Confirmed';
+        var role = $('#role').val();
+        var stage = $('#stage').val();
+        var rdate = $('#rdate').val();
+
+        var encappno = window.btoa(staffid);
+
+        var url = "leavedashboard.php?id="+encappno;            
+
+       //alert(reason + edate + sdate + reco);
+         $('#message').load('resumptionnotconfirmed.php', {
+                appno: appno,
+                staffid:staffid,
+                sdate: sdate,
+                edate: edate,
+                remarks: remarks,
+                reco: reco,
+                role: role,
+                stage: stage,
+                rdate: rdate
+            }, 
+          function(){
+          //alert("Date Saved");
+               $(location).attr('href', url);
+           });
+        });//end of btn not confirmed
+      });
 
 </script>
 </body>

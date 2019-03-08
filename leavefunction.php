@@ -11,6 +11,99 @@ function checkSession(){
 	}
 }//end of function checkSession
 
+function insertTo($staffid, $appno, $leavetype, $reason, $sdate, $edate, $session, $location, $phone, $officer1, $officer2, $officer3, $leavestatus, $datecreated)
+{
+	include 'config/database.php';
+	
+	$stmt = $con->prepare("INSERT INTO leaveapplication(staffid, appno, leavetype, reason, startdate, enddate, session, location, phone, officer1,officer2, officer3, leavestatus, leavestageid, datecreated) 
+                                VALUES(:staffid, :appno, :leavetype, :reason, :startdate, :enddate, :session, :location, :phone, :officer1, :officer2, :officer3, :leavestatus, :leavestageid, :datecreated )");
+
+                    $stmt->bindparam(':staffid', $staffid);
+                    $stmt->bindparam(':appno', $appno);
+                    $stmt->bindparam(':leavetype', $leavetype);
+                    $stmt->bindparam(':reason', $reason);
+                    $stmt->bindparam(':startdate', $sdate);
+                    $stmt->bindparam(':enddate', $edate);
+                    $stmt->bindparam(':session', $session);
+                    $stmt->bindparam(':location', $location);
+                    $stmt->bindparam(':phone', $phone);
+                    $stmt->bindparam(':officer1', $officer1);
+                    $stmt->bindparam(':officer2', $officer2);
+                    $stmt->bindparam(':officer3', $officer3);
+                    $stmt->bindparam(':leavestatus', $leavestatus);
+                    $stmt->bindparam(':leavestageid', $leavestageid);
+                    $stmt->bindparam(':datecreated', $datecreated);
+
+                      if($stmt->execute())
+                       {
+                        $query1 = "INSERT INTO leavetransaction (appno, tstaffid, transactionid, timeviewed, comment, status, recstartdate, recenddate) VALUE (:appno, :tstaffid, :transactionid, :timeviewed, :comment, :leavestatus, :startdate, :enddate)";
+                        $stmt1 = $con -> prepare($query1);
+
+                        $stmt1->bindparam(':appno', $appno);
+                        $stmt1->bindparam(':tstaffid', $staffid);
+                        $stmt1->bindparam(':transactionid', $transactionid);
+                        $stmt1->bindparam(':timeviewed', $datecreated);
+                        $stmt1->bindparam(':comment', $reason);
+                        $stmt1->bindparam(':leavestatus', $leavestatus);
+                        $stmt1->bindparam(':startdate', $sdate);
+                        $stmt1->bindparam(':enddate', $edate);
+
+                        if ($stmt1->execute())
+                        {
+                            //$result['success'] = 'Data Inserted';
+                            echo "SUCCESS";
+                        }
+                        else 
+                        {
+                            //$result['failed'] = 'Please try again';
+                          echo "FAIL";
+                        }//end of else
+                      }
+                      else
+                      {
+                        //$result['derror'] = 'Database Error';
+                        echo "DBASE ERROR";
+                      }//end of if statement executes
+
+
+}//end of insertTo
+
+function resumptionday($edate)
+{
+	$dayOfWeek = date("l", strtotime($edate));
+
+	if($dayOfWeek == 'Friday')
+		{
+			//$resumption = "Leave ends on ".date_format(date_create($edate), 'l, d-M-Y'). "<br>";
+			$date = date_create($edate);
+			date_modify($date, '+3 day');
+			$resumption = "". date_format($date, 'Y-m-d');
+
+			return $resumption;
+		}
+
+		elseif ($dayOfWeek == 'Saturday') 
+		{
+		    //$resumption = "Leave ends on ".date_format(date_create($edate), 'l, d-M-Y'). "<br>";
+		    $date = date_create($edate);
+		    date_modify($date, '+2 day');
+		    $resumption = "". date_format($date, 'Y-m-d');
+
+		    return $resumption;
+		}
+
+		else
+		{
+		    //$resumption = "Leave ends on ".date_format(date_create($edate), 'l, d-M-Y'). "<br>";
+		    $date = date_create($edate);
+		    date_modify($date, '+1 day');
+		    $resumption = "". date_format($date, 'Y-m-d');
+
+		    return $resumption;
+		}
+}//resumption day end
+
+
 function checkLeaveStatus($id)
 {
 	include 'config/database.php';
@@ -39,11 +132,135 @@ function checkLeaveStatus($id)
 			
 }//end of function check leave status
 
-function leavedetails($id)
+function leavedaysallowed($staffid, $leavetype)
 {
+	include 'config/database.php';
 
-}//end of function leave details
-	
+	if($leavetype == 'casual')
+	 {
+		  	$ndays = (int)7;
+	 }
+
+
+	else if($leavetype == 'maternity')
+	 {
+		  	$ndays = 98;
+	 }
+
+	else if ( $leavetype == 'annual' )
+	{
+		    $query = "SELECT level FROM stafflst WHERE staffid = '$staffid'";
+		    $stmt = $con->prepare($query);
+		    $stmt -> execute();
+		    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		    $level = $row['level'];
+
+		    if((int)$level >= 12)
+		    {
+		    	$ndays = 30;
+		    }
+		    else if((int)$level >= 10)
+		    {
+		    	$ndays = 21;
+		    }
+		    else {
+		    	$ndays = 14;
+		    }
+	}//////////////////////////
+	else{
+		$ndays = 0;
+	}
+
+	return $ndays;
+}//end of function leavedays
+
+function leavedaysgone($staffid, $currentsession, $leavetype)
+{
+	include 'config/database.php';
+
+            	$hquery = "SELECT ap.apstartdate, ap.apenddate 
+		                   FROM approvedleaves AS ap
+		                   WHERE ap.staffid LIKE '$staffid'
+		                   AND ap.session = '$currentsession'
+		                   AND ap.leavetype = '$leavetype'";
+
+		        $hstmt = $con->prepare($hquery);
+		        $hstmt->execute();      
+		        $hnum = $hstmt->rowCount(); 
+		     
+		        $days = array();
+	            $i = 1;
+	            $leavedaystotal = 0;
+	            while ($row = $hstmt->fetch(PDO::FETCH_ASSOC))
+	            {  
+		            $date1 = $row['apstartdate'];
+		            $date2 = $row['apenddate']; 
+		            $days[$i] = (int)numdays($date1, $date2);
+		            $leavedaystotal += $days[$i];   
+		            ++$i;//increment counter
+		          }
+
+		         return $leavedaystotal;
+}//end of function leavedaysdone
+
+function casualleavedaysgone($staffid, $currentsession)
+{
+	include 'config/database.php';
+
+            	$hquery = "SELECT ap.apstartdate, ap.apenddate 
+		                   FROM approvedleaves AS ap
+		                   WHERE ap.staffid LIKE '$staffid'
+		                   AND ap.leavetype = 'casual'
+		                   AND ap.session = '$currentsession'";
+
+		        $hstmt = $con->prepare($hquery);
+		        $hstmt->execute();      
+		        $hnum = $hstmt->rowCount(); 
+		     
+		        $days = array();
+	            $i = 1;
+	            $leavedaystotal = 0;
+	            while ($row = $hstmt->fetch(PDO::FETCH_ASSOC))
+	            {  
+		            $date1 = $row['apstartdate'];
+		            $date2 = $row['apenddate']; 
+		            $days[$i] = (int)numdays($date1, $date2);
+		            $leavedaystotal += $days[$i];   
+		            ++$i;//increment counter
+		          }
+
+		         return $leavedaystotal;
+}//end of function leavedaysdone
+
+function annualleavedaysgone($staffid, $currentsession)
+{
+	include 'config/database.php';
+
+            	$hquery = "SELECT ap.apstartdate, ap.apenddate 
+		                   FROM approvedleaves AS ap
+		                   WHERE ap.staffid LIKE '$staffid'
+		                   AND ap.leavetype = 'annual'
+		                   AND ap.session = '$currentsession'";
+
+		        $hstmt = $con->prepare($hquery);
+		        $hstmt->execute();      
+		        $hnum = $hstmt->rowCount(); 
+		     
+		        $days = array();
+	            $i = 1;
+	            $leavedaystotal = 0;
+	            while ($row = $hstmt->fetch(PDO::FETCH_ASSOC))
+	            {  
+		            $date1 = $row['apstartdate'];
+		            $date2 = $row['apenddate']; 
+		            $days[$i] = (int)numdays($date1, $date2);
+		            $leavedaystotal += $days[$i];   
+		            ++$i;//increment counter
+		          }
+
+		         return $leavedaystotal;
+}//end of function leavedaysdone
 
 function getname($id)
 {
@@ -62,7 +279,7 @@ function getname($id)
 
 		return $name;
 
-	}//end of function getname
+}//end of function getname
 
 function getunitprgid($id){
 	

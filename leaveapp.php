@@ -10,71 +10,72 @@ For every appno entrying this file, the transactionid increases by 1.
 
 // $staffid = implode(',', array_map(function($el){ return $el['idno']; }, get_user($_SESSION['loginid']))) ?implode(',', array_map(function($el){ return $el['idno']; }, get_user($_SESSION['loginid']))) : $_GET[''];
 
-
 include('config/database.php');
 include('leavefunction.php');
 
 checkSession();
 $staffid = $_SESSION['staffdetails']['staffid'];
+$level = $_SESSION['staffdetails']['level'];
 
-$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$ltype = base64_decode($_GET['ltype']);
 
-/*
-echo $_SESSION['loginid']."<br>";
 
-if(isdean($_SESSION['loginid'])){
-  echo "DEAN";
-}
-
-if(isHod($_SESSION['loginid'])){
-  echo "HOD";
-}
-*/
+      //officer query
+        $qry = "SELECT staffid, sname, fname FROM stafflst";
+        $stmt = $con->prepare($qry);
+        $stmt->execute();
+       //$staff = $stmt->fetch(PDO::FETCH_ASSOC);
+ /////////////////////////////////////////////////////////////////////////////////       
+        #leavetype query
+        $ltypeqry = "SELECT type FROM leavetypes";
+        $stmt1 = $con->prepare($ltypeqry);
+        $stmt1->execute();
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<title></title>
+<title>Leave Application Form</title>
 
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
- <!--  <link rel="stylesheet" href="/resources/demos/style.css"> -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script
-  src="https://code.jquery.com/jquery-3.3.1.js"
-  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-  crossorigin="anonymous">
-</script>
-
-
+  <script src="js/datepicker.js"></script>
 
 <!------ Include the above in your HEAD tag ---------->
 <style type="text/css">
-  #space{
-    padding-top: 100px;
-  }
+        #space{
+          padding-top: 100px;
+        }
 
-.adiff {
-  position: absolute;
-  top: 237px;
-  right: -90px;
-  width: 100px;
-  height: 40px;
-  padding: 3px;
-  margin-left: 10px;  
-}
+      .adiff {
+        position: absolute;
+        top: 237px;
+        right: -90px;
+        width: 100px;
+        height: 40px;
+        padding: 3px;
+        margin-left: 10px;  
+      }
 
-.dialog{
-	display: none;
-}
+      .dialog{
+      	display: none;
+      }
 </style>
 
 </head>
 <body>
 
-<div></div>
+<div>
+  <?php
+      echo "Level = ".$level."<br>";
+  //    echo " Allowed leave days of level = ".leavedays($level);
+
+  ?>
+</div>
+
   <div id="space" class="row">
     <div class="col-md-6 col-md-offset-2">
       <form class="form-horizontal" role="form" action="" method="POST">
@@ -90,35 +91,43 @@ if(isHod($_SESSION['loginid'])){
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Leave Category</label>
             <div class="col-sm-9">
-              <select name="leavetype" class="form-control" id="leavetype" required>
-                          <option value = ''></option>
-                          <option value = 'casual'>Casual</option>
-                          <option value = 'annual'>Annual</option>
-                          <option value = 'medical'>Medical</option>
-                          <option value = 'study'>Study</option>
-                          <option value = 'post_doc'>Post Doctoral</option>
-              </select>
+              <input type="text" class="form-control" name="leavetype" id="leavetype" value="<?php echo ucfirst($ltype); ?>" disabled>
+          <?php 
+            /*
+                $select = '<select name="leavetype" id="leavetype" class="form-control" required>';
+                $select .= '<option value = "">Select Leave Type</option>';
+
+                while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                  //$result[] = $row; 
+                $select .= '<option value = "'.$row1['type'].'">'.ucfirst($row1['type']).'</option>';
+                     }//end of while statement 
+                $select .= '</select>';
+                echo $select;
+            */
+                       
+          ?>
+
             </div>
           </div>
 
           <!-- Reason for Leave-->
           <div class="form-group">
-            <label class="col-sm-3 control-label" for="textinput">Reason For Leave</label>
+            <label class="col-sm-3 control-label" for="textinput">Reason/Comment</label>
             <div class="col-sm-9">
-              <textarea class="form-control" name="reason" id="reason" rows="5" cols="40" placeholder="Reasons for Leave" required></textarea>
+              <textarea class="form-control" name="reason" id="reason" rows="3" cols="40" placeholder="Reasons for Leave" required></textarea>
             </div>
           </div>
           
           <!-- Date Entry-->
           <div class="form-group">
-            <label class="col-sm-3 control-label" for="textinput">Start Date</label>
+            <label class="col-sm-3 control-label" for="textinput">Proposed Start Date</label>
             <div class="col-sm-3">
-              <input type="date" class="form-control" name="sdate" id="sdate" required>
+              <input type="text" class="form-control" name="sdate" id="sdate" required>
             </div>
 
-            <label class="col-sm-3 control-label" for="textinput">End Date</label>
+            <label class="col-sm-3 control-label" for="textinput">Proposed End Date</label>
             <div class="col-sm-3">
-              <input type="date" class="form-control" name="edate" id="edate" required>
+              <input type="text" class="form-control" name="edate" id="edate" required>
             </div>
             <p id="datedif"> </p>
           </div>
@@ -136,16 +145,6 @@ if(isHod($_SESSION['loginid'])){
               <input type="text" class="form-control" name="phone" id="phone">
             </div>
           </div>
-
-          <?php
-          		//$loginid = $_SESSION['loginid'];
-
-          		$qry = "SELECT staffid, sname, fname FROM stafflst";
-  				    $stmt = $con->prepare($qry);
-	       			$stmt->execute();
-
-				      //$staff = $stmt->fetch(PDO::FETCH_ASSOC);
-			   ?>
 
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textinput">Officer 1</label>
@@ -186,15 +185,14 @@ if(isHod($_SESSION['loginid'])){
             <label class="col-sm-3 control-label" for="textinput">Officer 3</label>
             <div class="col-sm-9">
               <select name="officer3" id="officer3" class="form-control" required>
-              	<?php
+    <?php
                  foreach ($result as $staff)    
 			
 			{ 
                 echo  '<option value = "'.$staff['staffid'].'">'.$staff['sname'].' '.$staff['fname'].'</option>';
             }
-            ?>
-                         <!--  <option value = ''></option>
-                          <option value = 'Jaja'>Jaja</option> -->
+    ?>
+                        
               </select>
             </div>
           </div>
@@ -203,6 +201,7 @@ if(isHod($_SESSION['loginid'])){
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <div class="pull-right">
+                <a class="btn btn-default" href='leaveapptest.php'>Select another leave category</a>
                 <a class="btn btn-default" href='leavedashboard.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>'>Cancel</a>
                  <button type="submit" class="btn" id="apply">Submit</button>
               </div>
@@ -211,10 +210,28 @@ if(isHod($_SESSION['loginid'])){
     </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
 
+<div id="dataModal" class="modal fade">  
+      <div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
+                     <h4 class="modal-title">Message</h4>  
+                </div>  
+                <div class="modal-body" id="leavedetail">  
+                </div>  
+                <div class="modal-footer">  
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                </div>  
+           </div>  
+      </div>  
+ </div>  
+ 
+</body>
+
 
 <script type="text/javascript">
   
-  $(function(){
+$(function(){
 
   //$( "#sdate" ).datepicker( "input", "dateFormat", "d-M-yy");
     $("#edate").change(function(ev){
@@ -226,7 +243,7 @@ if(isHod($_SESSION['loginid'])){
 
       $.ajax({
         type: "POST",
-        url: "datediff.php",
+        url: "datedif.php",
         data: {
             sdate:sdate,
             edate:edate
@@ -267,15 +284,15 @@ if(isHod($_SESSION['loginid'])){
 
     //hurl = 'redrect.php';
 	if ((leavetype == '') || (reason == '') || (sdate == '') || (edate == '') || (location == '') || (phone == '') || (officer1 == '') || (officer2 == '') || (officer3 == ''))
-		 {
-				alert("All fields are required.");
-			}
-else {
+	{
+		alert("All fields are required.");
+	}
+  else {
         
 // AJAX code to send data to php file.
     $.ajax({
             type: "POST",
-            url:   "leavein.php",
+            url:   "test2.php",
             data: {
               leavetype:leavetype,
               reason:reason,
@@ -289,22 +306,26 @@ else {
             },
             dataType: "text",
             success: function(response) {
-            	if (response == 'SUCCESS') {
-            		alert("Application Successful. You will be redirected to Dashboard");
-            		window.location.replace("leavedashboard.php?id="+btoa(staffid));
-            	}
+              	if (response == 'SUCCESS') {
+              		alert("Application Successful. You will be redirected to Dashboard");
+              		window.location.replace("leavedashboard.php?id="+btoa(staffid));
+              	}
 
-            	if (response == 'ERROR') {
-            		alert("Try Again");
-            	}
+              	if (response == 'FAIL') {
+              		alert("Try Again");
+              	}
 
-            	if (response == 'EMPTY FORM') {
-            		alert("One part of the form is not filled");
-            	}
+              	if (response == 'EMPTY FORM') {
+              		alert("One part of the form is not filled");
+              	}
 
-              if (response == 'DATABASE ERROR') {
-                alert("Try again later");
-              }
+                if (response == 'DBASE ERROR') {
+                  alert("Try again later");
+                }
+                if (response == 'CHECK') 
+                {
+                  alert("Try again later");  
+                }
             },
             error: function(data) {
                 $("#message").html(data);
@@ -319,5 +340,4 @@ else {
 });
 </script>
 
-</body>
 </html>

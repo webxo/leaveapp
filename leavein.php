@@ -77,10 +77,8 @@ $datecreated = date('Y-m-d H:i:s');
 $timeviewed = date('Y-m-d H:i:s');
 $appno = serAppno();
 //$appno = appNo(9);
-$leavestatus = "Submitted";
-$leavestageid = 1;
+$leavestatus = "SUBMITTED";
 $transactionid = 1;
-$role = "Applicant";//role of the staff as at the point of leave application
 //$staffid = $_SESSION['loginid'];
 
 //$_SESSION['username'] ? $_SESSION['username'] : $_GET['id'] ;
@@ -91,8 +89,8 @@ $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 if(count($formerror) == 0 ) //test for errors in the form
 {
 
-$stmt = $con->prepare("INSERT INTO leaveapplication(staffid, appno, leavetype, reason, startdate, enddate, location, phone, officer1,officer2, officer3, leavestatus, leavestageid, datecreated) 
-						VALUES(:staffid, :appno, :leavetype, :reason, :startdate, :enddate, :location, :phone, :officer1, :officer2, :officer3, :leavestatus, :leavestageid, :datecreated )");
+$stmt = $con->prepare("INSERT INTO leaveapplication(staffid, appno, leavetype, reason, startdate, enddate, location, phone, officer1,officer2, officer3, leavestatus, datecreated) 
+            VALUES(:staffid, :appno, :leavetype, :reason, :startdate, :enddate, :location, :phone, :officer1, :officer2, :officer3, :leavestatus, :datecreated )");
 
 $stmt->bindparam(':staffid', $staffid);
 $stmt->bindparam(':appno', $appno);
@@ -106,45 +104,41 @@ $stmt->bindparam(':officer1', $officer1);
 $stmt->bindparam(':officer2', $officer2);
 $stmt->bindparam(':officer3', $officer3);
 $stmt->bindparam(':leavestatus', $leavestatus);
-$stmt->bindparam(':leavestageid', $leavestageid);
 $stmt->bindparam(':datecreated', $datecreated);
 
 
-
-
 if($stmt->execute())
-		{
-				$query1 = "INSERT INTO leavetransaction (appno, tstaffid, role, transactionid, timeviewed, comment, status, recstartdate, recenddate) VALUE (:appno, :tstaffid, :role, :transactionid, :timeviewed, :comment, :leavestatus, :startdate, :enddate)";
-				$stmt1 = $con -> prepare($query1);
+    {
+        $query1 = "INSERT INTO leavetransaction (appno, tstaffid, transactionid, timeviewed, comment, status, recstartdate, recenddate) VALUE (:appno, :tstaffid, :transactionid, :timeviewed, :comment, :leavestatus, :startdate, :enddate)";
+        $stmt1 = $con -> prepare($query1);
 
-				$stmt1->bindparam(':appno', $appno);
-				$stmt1->bindparam(':tstaffid', $staffid);
-        $stmt1->bindparam(':role', $role);
-				$stmt1->bindparam(':transactionid', $transactionid);
-				$stmt1->bindparam(':timeviewed', $timeviewed);
-				$stmt1->bindparam(':comment', $reason);
-				$stmt1->bindparam(':leavestatus', $leavestatus);
-				$stmt1->bindparam(':startdate', $sdate);
+        $stmt1->bindparam(':appno', $appno);
+        $stmt1->bindparam(':tstaffid', $staffid);
+        $stmt1->bindparam(':transactionid', $transactionid);
+        $stmt1->bindparam(':timeviewed', $timeviewed);
+        $stmt1->bindparam(':comment', $reason);
+        $stmt1->bindparam(':leavestatus', $leavestatus);
+        $stmt1->bindparam(':startdate', $sdate);
         $stmt1->bindparam(':enddate', $edate);
 
- 				if ($stmt1->execute())
+        if ($stmt1->execute())
         {
- 						echo 'SUCCESS';
-				}
+            echo 'SUCCESS';
+        }
         else 
         {
             echo 'ERROR';
-     		}//end of else
-		}
+        }//end of else
+    }
     else
     {
       echo 'DATABASE ERROR';
     }//end of if statement executes
  /*
  }//end of try
-	    catch(PDOException $e){
-	   	 echo "Error: " . $e->getMessage();
-	    }//end of catch
+      catch(PDOException $e){
+       echo "Error: " . $e->getMessage();
+      }//end of catch
       */
 
 }//end of if form error
@@ -152,10 +146,10 @@ else
 {
   echo 'EMPTY FORM';
   /*
-	foreach($formerror as $formerrors) 
-	{
-    	echo $formerrors;
-    	echo "<br>";
-	}*/
+  foreach($formerror as $formerrors) 
+  {
+      echo $formerrors;
+      echo "<br>";
+  }*/
 }//end of else to test for errors in form data
 ?>

@@ -65,7 +65,7 @@ try {
         
         $numtr = $stmtr->rowCount();  
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
                      $recqry = "SELECT recctitle, reccgroup
                                 FROM leaverecommendations
@@ -94,6 +94,9 @@ try {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <style>
+    .wrapper{
+      padding-left: 300px;
+    }
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
     .row.content {height: 1500px}
     
@@ -123,6 +126,7 @@ try {
     while($staffdet=$stmtleave->fetch(PDO::FETCH_ASSOC))
         {
     ?>
+<div class="wrapper">
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-8">
@@ -234,7 +238,7 @@ try {
                             }
                         ?>
 
-<h4><b>Leave History for Current Year</b></h4>
+<!-- <h4><b>Leave History for Current Year</b></h4>
 <table class="table table-bordered table-condensed">
   <tr>
     <th style="width: 50%;">Casual leave days taken</th>
@@ -249,7 +253,7 @@ try {
     <th>Leave Days Entitled</th>
     <td>4</td>
   </tr>
-</table>
+</table> -->
 
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 </div><!---End of Side bar--->
@@ -274,10 +278,17 @@ try {
                echo '<td><b>Recommended Start date</b></td>';
          
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
-             {     
-                  echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].' readonly></td>';
+             {   
+                  
+                  $rdt = strtotime($lvdate["recstartdate"]);
+                  $rdate1 = date("d-M-y", $rdt); 
+                  
+                  $redt = strtotime($lvdate["recenddate"]);
+                  $redate1 = date("d-M-y", $redt); 
+
+                  echo '<td> <input type="text" id="sdate" value='.$rdate1.'></td>';
                   echo '<td><b>Recommended End date</td></b>';
-                  echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].' readonly></td>';
+                  echo '<td> <input type="text" id="edate" value='.$redate1.'></td>';
                   echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                   echo  '</td>';
                   echo '<td id="datedif"> </td>';
@@ -332,13 +343,13 @@ try {
 <div id="error"></div>
   
 </div>
-
+</div>
 
  <script type="text/javascript">
 
-        $(document).ready(function(){
-           
-             $('select#reco').change(function(){
+    $(document).ready(function(){
+
+          $('select#reco').change(function(){
 
             var appno = $('#appno').val();
             var staffid = $('#staffid').val();
@@ -349,7 +360,7 @@ try {
             var role = $('#role').val();
             var stage = $('#stage').val();
 
-            alert(appno+staffid+sdate+edate+remarks+reco+role);
+            //alert(appno+staffid+sdate+edate+remarks+reco+role);
 
             var encappno = window.btoa(staffid);
 
@@ -360,24 +371,28 @@ try {
                   alert("There is a missing field somewhere.");
             }
 
-            $('#error').load('hrapproval.php', {
-                      appno: appno,
-                      staffid:staffid,
-                      sdate: sdate,
-                      edate: edate,
-                      remarks: remarks,
-                      reco: reco,
-                      role: role,
-                      stage: stage
-                 }, 
-                 function(){
-                      alert("Approval Sent");
-                      $(location).attr('href', url);
-                });         
+            else {
+              
+                $('#error').load('releasestaff.php', {
+                          appno: appno,
+                          staffid:staffid,
+                          sdate: sdate,
+                          edate: edate,
+                          remarks: remarks,
+                          reco: reco,
+                          role: role,
+                          stage: stage
+                     }, 
+                     function(){
+                          alert("Approval Sent");
+                          $(location).attr('href', url);
+                    });  
+            }       
 
         });
             
     });
-    </script>
+    
+</script>
 </body>
 </html>

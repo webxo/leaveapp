@@ -33,13 +33,12 @@
 <body>
 <div class="container">
     <div class="row hed" >
-      <div class="col-md-4"></div>
+      <div class="col-md-3"></div>
       <h3 class="h3">
-
       
       <?php 
               if ($staffid == $hodid) {
-                  echo "Pending Leave Application For ".$dept." Department";
+                  echo "List of Resumed Staff in ".$dept." Department";
               } 
               elseif ($staffid == $deanid)
               {
@@ -65,8 +64,7 @@
     <!-- End of title  -->
     
     <div class="row">
-
-      <div class="col-md-2"></div>      
+      <div class="col-md-3"></div>
           <table class="table-sm ">
        
 <?php 
@@ -78,18 +76,23 @@ if(isset($_GET['id']))
   {             
   try 
       {
-        #Query to select leave details of the $this staff
+        #Query to select the details of staff who has indicated resumption from leave.
+        #The query uses the status in leave transaction table to fetch it result. 
+        #The result is usually
           $query = "SELECT lt.timeviewed, l.staffid, lt.appno, lt.tstaffid, l.leavetype, l.reason, l.startdate, l.enddate, l.location, lt.remarks, lt.status, st.coldirid, st.hod, st.dean, st.dept
           FROM leavetransaction AS lt
           INNER JOIN leaveapplication AS l
           ON lt.appno = l.appno
           INNER JOIN stafflst AS st
           ON st.staffid = l.staffid
+          INNER JOIN approvedleaves AS ap
+          ON ap.appno = lt.appno
           WHERE st.dept = '$dept' 
           AND st.staffid != '$hodid' 
-          AND l.leavestatus = 'Submitted'
-          AND l.leavestageid = '1'
+          AND lt.status = 'Resumed'
           AND lt.role = 'Applicant'
+          AND lt.remarks = ''
+          AND ap.resumeddate = ''
           AND st.category = '$cat'
           ORDER BY lt.timeviewed DESC";
 
@@ -149,14 +152,14 @@ if(isset($_GET['id']))
                       echo "<td>";
                           //view a single record
                       $appno = $row['appno'];
-                      echo '<a href="leavedash.php?appno='.base64_encode($appno).'" class="btn btn-sm m-r-0em">Review</a>';//link to update record
+                      echo '<a href="resumptionconfirmdash.php?appno='.base64_encode($appno).'" class="btn btn-sm m-r-0em">Review</a>';//link to update record
                       echo "</td>";
                   echo "</tr>";
                  }//end of while loop
                 }//end of if statement for printing results into tables 
         else {
           echo "<tr>";
-                    echo "<td colspan=\"13\"> No Staff in the department applied for leave yet</td>";
+                    echo "<td colspan=\"13\"> No Staff has indicated Resumption</td>";
           echo "</tr>";
         }
       
@@ -442,7 +445,7 @@ if(isset($_GET['id']))
   }
 
   elseif ($id == $vco){
-   // echo "VICE CHANCELOR'S OFFICE";
+    echo "VICE CHANCELOR'S OFFICE";
 
     try 
       {

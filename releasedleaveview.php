@@ -89,7 +89,7 @@ if(isset($_GET['id']))
             echo "<th> Location</th>";
             echo  "<th> Phone</th>";
             echo  "<th> Release Date</th>";
-            echo  "<th> Resumption Date</th>";
+            //echo  "<th> Resumption Date</th>";
             echo "<th> Action</th>";
          echo "</tr>";
  
@@ -115,7 +115,7 @@ if(isset($_GET['id']))
                       echo "<td>".$row['location']."</td>";
                       echo "<td>".$row['phone']."</td>";
                       echo "<td>".$row['releaseddate']."</td>";
-                      echo "<td>".$row['resumeddate']."</td>";
+                      //echo "<td>".$row['resumeddate']."</td>";
                       //echo "<td>".$row['status']."</td>";
                       
                       echo "<td>";

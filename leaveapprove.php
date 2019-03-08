@@ -18,6 +18,9 @@ $transactionid = $track + 1;
 
 //get the time viewed
 $timeviewed = date('Y-m-d H:i:s');
+
+$edate = date('Y-m-d', strtotime($edate));
+$sdate = date('Y-m-d', strtotime($sdate));
  
 
   $qry = "INSERT INTO leavetransaction (appno, tstaffid, role, transactionid, timeviewed, status, recstartdate, recenddate, remarks) 
@@ -45,7 +48,7 @@ $timeviewed = date('Y-m-d H:i:s');
 
     if($stmtu->execute())
     {
-        $qry1 = "SELECT l.staffid, l.appno, l.leavetype, lt.recstartdate, lt.recenddate, l.location, l.phone
+        $qry1 = "SELECT l.staffid, l.appno, l.leavetype, l.reason, lt.recstartdate, lt.recenddate, l.session, l.location, l.phone
                 FROM leaveapplication AS l
                 INNER JOIN leavetransaction AS lt
                 ON lt.appno = l.appno
@@ -59,21 +62,23 @@ $timeviewed = date('Y-m-d H:i:s');
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 $staffId = $row['staffid'];
                 $leavetype = $row['leavetype'];
-                $recst = $row['recstartdate'];
-                $recend = $row['recenddate'];
+                $reason = $row['reason'];
+                $csession = $row['session'];//current session
                 $location = $row['location'];
                 $phone = $row['phone'];
         
-        $qry2 = "INSERT INTO approvedleaves (staffid, appno, leavetype, apstartdate, apenddate, location, phone) 
-              VALUES (:staffId, :appno, :leavetype, :recst, :recend, :location, :phone)";
+        $qry2 = "INSERT INTO approvedleaves (staffid, appno, leavetype, reason, apstartdate, apenddate, session, location, phone) 
+                VALUES (:staffId, :appno, :leavetype, :reason, :recst, :recend, :session, :location, :phone)";
 
               $stmt1 = $con->prepare($qry2);
 
               $stmt1->bindParam(':staffId', $staffId);
               $stmt1->bindParam(':appno', $appno);
               $stmt1->bindParam(':leavetype', $leavetype);
-              $stmt1->bindParam(':recst', $recst);
-              $stmt1->bindParam(':recend', $recend);
+              $stmt1->bindParam(':reason', $reason);
+              $stmt1->bindParam(':recst', $sdate);
+              $stmt1->bindParam(':recend', $edate);
+              $stmt1->bindParam(':session', $csession);
               $stmt1->bindParam(':location', $location);
               $stmt1->bindParam(':phone', $phone);
 

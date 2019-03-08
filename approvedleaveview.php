@@ -89,7 +89,7 @@ if(isset($_GET['id']))
             echo "<th> Days</th>";
             echo "<th> Location</th>";
             echo  "<th> Phone</th>";
-            echo  "<th> Release Date</th>";
+            //echo  "<th> Release Date</th>";
             echo "<th> Action</th>";
          echo "</tr>";
  
@@ -114,7 +114,7 @@ if(isset($_GET['id']))
                       echo "<td>".numdays($row['apstartdate'], $row['apenddate'])."</td>";
                       echo "<td>".$row['location']."</td>";
                       echo "<td>".$row['phone']."</td>";
-                      echo "<td>".$row['releaseddate']."</td>";
+                      //echo "<td>".$row['releaseddate']."</td>";
                       //echo "<td>".$row['status']."</td>";
                       
                       echo "<td>";

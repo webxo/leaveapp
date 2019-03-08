@@ -94,6 +94,9 @@ try {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <style>
+    .wrapper{
+      padding-left: 300px;
+    }
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
     .row.content {height: 1500px}
     
@@ -118,6 +121,7 @@ try {
   </style>
 </head>
 <body>
+<div class="wrapper">
   <?php
   if ($num > 0) { 
     while($staffdet=$stmtleave->fetch(PDO::FETCH_ASSOC))
@@ -274,28 +278,32 @@ try {
                echo '<td><b>Recommended Start date</b></td>';
          
             while($lvdate=$chkstmt1->fetch(PDO::FETCH_ASSOC))
-             {     
-                  echo '<td> <input type="date" id="sdate" value='.$lvdate["recstartdate"].' readonly></td>';
+            {     
+                 
+                  $sdate = date('Y-m-d', strtotime($lvdate["recstartdate"]));
+                  $edate = date('Y-m-d', strtotime($lvdate["recenddate"]));
+
+                  echo '<td> <input type="date" id="sdate" value='.$sdate.' readonly></td>';
                   echo '<td><b>Recommended End date</td></b>';
-                  echo '<td> <input type="date" id="edate" value='.$lvdate["recenddate"].' readonly></td>';
+                  echo '<td> <input type="date" id="edate" value='.$edate.' readonly></td>';
                   echo '<td id="datecomot">'.numdays($lvdate['recstartdate'], $lvdate['recenddate']). ' days';
                   echo  '</td>';
                   echo '<td id="datedif"> </td>';
                                
                    echo '</tr>';
-                    echo '</table>';
-                    echo '<table class="table">';
+                   // echo '</table>';
+                    //echo '<table class="table">';
                       echo '<tr>';
                         echo '<td><b>Comment</b></td>';
-                        echo '<td><textarea class="form-control" id="remarks" rows="2" cols="80" readonly>'.$lvdate["remarks"].'</textarea></td>';
+                        echo '<td colspan="5"><textarea class="form-control" id="remarks" rows="2" cols="80" readonly>'.$lvdate["remarks"].'</textarea></td>';
                       echo '</tr>';
-                    echo '</table>';                    
+                    //echo '</table>';                    
             }//end of while    
                     echo '<input type="hidden" id="role" value="HR">'; 
-                        echo '<td><label>Release Options</label> ';
+                        echo '<td colspan="2"><label>Release Options</label>';
                         echo '<input type="hidden" id="appno" value="'.$appno.'">';
                          echo '<input type="hidden" id="staffid" name="staffId" value="'.$_SESSION['staffdetails']['staffid'].'">';
-                          echo ' <select id="reco">';
+                          echo '&nbsp; <select id="reco">';
                             echo '<option>Select Release</option>';         
                               
                                   if ($recnum > 0) { //if starts here
@@ -307,16 +315,14 @@ try {
                                   }//end of if statement  
                             
                           echo '</select>'; 
-
 }
   
-?>
-        <!--------------------------cut from here---------------------------------------------------->    
+?>  
     </td>
       <!-- <td>
         <button id="btn-save" class="btn">Release</button>
       </td> -->
-      <td>
+      <td colspan="2">
         <button>
           <a style="font-size: 14px;" href="releasedleaveview.php?id= <?php echo base64_encode($_SESSION['staffdetails']['staffid']); ?>">Back</a>
         </button>
@@ -328,7 +334,7 @@ try {
 <div id="error"></div>
   
 </div>
-
+</div><!--End of wrapper-->
 
  <script type="text/javascript">
 
