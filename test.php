@@ -1,18 +1,40 @@
 <?php
-require_once "config/database.php";
 
-$sql = "SELECT idno, fname, sname FROM userz";
+include 'config/database.php';
+include 'leavefunction.php';
 
-$stmt = $con->prepare($sql);
+        $query ="SELECT * FROM approvedleaves WHERE resumeddate = ' '";
 
-$stmt->execute();
 
-			while($row=$stmt->fetch(PDO::FETCH_ASSOC))
-		             {
-		               //extract row this truns array keys into variables
-		               extract($row);
-		               echo $idno."  ".$fname."<br>";
-		              }
+        $stmt = $con->prepare($query);
+        $stmt->execute();  
 
-		
+        $num = $stmt->rowCount();
+
+        $today = date('Y-m-d');
+
+        echo "Overstay Page <br>";
+        echo "------------------------------------------------------"; 
+
+        if( $num > 0 )
+        {
+            while( $row = $stmt->fetch(PDO::FETCH_ASSOC))
+            {
+              $resdt = resumptionday($row['apenddate']);
+             // echo $resdt.' '.$row['apenddate']. ' '. $today. '<br>';
+
+              if($today > $resdt)
+              {
+                echo '<br>'.$row['staffid'].'---'. $resdt.'----'.$row['apenddate']. '---'. $today. 'This staff has overstayed <br>';
+                //echo "This staff has overstayed<br>";
+              }
+            }
+        }
+        else
+        {
+          echo 'No staff has overstayed';
+        }
+
+
+
 ?>

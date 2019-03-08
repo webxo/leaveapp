@@ -2,45 +2,40 @@
 // Initialize the session
 session_start();
  
-// Check if the user is already logged in, if yes then redirect him to welcome page
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+/*Check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION["staffid"]) && $_SESSION["staffid"] === true){
     header("location: welcome.php");
     exit;
 }
+*/
  
 // Include config file
 require_once "config/database.php";
+include 'leavefunction.php';
  
 // Define variables and initialize with empty values
-$username = $password = "";
-$username_err = $password_err = "";
+$userid = "";
+$userid_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Check if username is empty
     if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter username.";
+        $userid_err = "Please enter username.";
     } else{
-        $username = trim($_POST["username"]);
-    }
-    
-    // Check if password is empty
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter your password.";
-    } else{
-        $password = trim($_POST["password"]);
+        $userid = trim($_POST["username"]);
     }
     
     // Validate credentials
-    if(empty($username_err) && empty($password_err)){
+    if(empty($userid_err)){
         // Prepare a select statement
-        $sql = "SELECT idno, fname, sname FROM userz WHERE fname = :username";
+        $sql = "SELECT * FROM stafflst WHERE staffid = :userid";
         
         try{
             if($stmt = $con->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
+            $stmt->bindParam(":userid", $param_username, PDO::PARAM_STR);
             
             // Set parameters
             $param_username = trim($_POST["username"]);
@@ -49,31 +44,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             if($stmt->execute()){
                 // Check if username exists, if yes then verify password
                 if($stmt->rowCount() == 1){
-                    if($row = $stmt->fetch()){
-                        $id = $row["idno"];
-                        $username = $row["fname"];
-                        $sname = $row["sname"];
-                        //$hashed_password = $row["password"];
-                        echo $username;
-                        if(password_verify($password, $sname)){
-                            // Password is correct, so start a new session
-                            session_start();
-                            
-                            // Store data in session variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
-                            
-                            // Redirect user to welcome page
-                            header("location: welcome.php");
-                        } else{
-                            // Display an error message if password is not valid
-                            $password_err = "The password you entered was not valid.";
-                        }
-                    }
-                } else{
+                    if($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                        $staffdetails = $row;
+                        $_SESSION['staffdetails'] = $staffdetails;
+                        //print_r($staffdetails);
+
+                        header("location: leavedashboard.php?id=".base64_encode($userid));
+                        
+                        }//end of row if statement
+                } 
+                else
+                {
                     // Display an error message if username doesn't exist
-                    $username_err = "No account found with that username.";
+                    $userid_err = "No account found with that userID.";
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -108,20 +91,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
-                <span class="help-block"><?php echo $username_err; ?></span>
+            <div class="form-group <?php echo (!empty($userid_err)) ? 'has-error' : ''; ?>">
+                <label>User ID</label>
+                <input type="text" name="username" class="form-control" value="<?php //echo $username; ?>">
+                <span class="help-block"><?php echo $userid_err; ?></span>
             </div>    
-            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control">
-                <span class="help-block"><?php echo $password_err; ?></span>
-            </div>
+            
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Login">
+                <input type="submit" class="btn btn-default" value="Login">
             </div>
-            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+            
         </form>
     </div>
 </body>
